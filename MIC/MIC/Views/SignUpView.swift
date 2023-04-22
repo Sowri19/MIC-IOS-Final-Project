@@ -18,6 +18,8 @@ struct SignUpView: View {
     @State private var bookings = [Booking]()
     @State private var Comedian = false
     
+    
+    
     @State private var showAlert = false
     @State private var alertMessage = ""
 
@@ -107,125 +109,124 @@ struct SignUpView: View {
                 .padding()
                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.white))
                 .padding()
-                Button(action: {
-                    withAnimation{self.currentShowingView = "login"}
-                }){
-                    Text("Already Have an account?")
-                        .foregroundColor(.gray)
-                }
-                Spacer()
-                Spacer()
-                Button{
-                    // Check if email and password are not empty
-                    guard !email.isEmpty, !password.isEmpty else {
-                        // Show alert message
-                        showAlert(title: "Error", message: "Please enter both email and password")
-                        return
+                
+                Group {
+                    Button(action: {
+                        withAnimation{self.currentShowingView = "login"}
+                    }){
+                        Text("Already Have an account?")
+                            .foregroundColor(.gray)
                     }
-                    // Check if email is valid
-                    guard email.isValidEmail() else {
-                        // Show alert message
-                        showAlert(title: "Error", message: "Please enter a valid email address")
-                        return
-                    }
-                    // Check if password is valid
-                    guard isValidPassword(password) else {
-                        // Show alert message
-                        showAlert(title: "Error", message: "Please enter a valid password (minimum 6 characters with at least one uppercase letter, one special character and one lowercase letter)")
-                        return
-                    }
-                    
-                    Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
-                        if let error = error {
-                            print(error)
+                    Spacer()
+                    Spacer()
+                    Button{
+                        // Check if email and password are not empty
+                        guard !email.isEmpty, !password.isEmpty else {
                             // Show alert message
-                            showAlert(title: "Error", message: error.localizedDescription)
+                            MIC.showAlert(title: "Error", message: "Please enter both email and password")
                             return
                         }
-                        if let authResult = authResult {
-                            let db = Firestore.firestore()
-                            db.collection("users").addDocument(data: ["isComedian": Comedian, "uid": authResult.user.uid]) { error in
-                                if let error = error {
-                                    // Show error message
-                                    print("Error saving user data: \(error.localizedDescription)")
-                                    showAlert(title: "Error", message: "Error saving user data")
-                                } else {
-                                    print("User data saved successfully")
-                                }
-                            }
-                            print(authResult.user.uid)
-                            print(authResult.user.displayName ?? "")
-                            userID = authResult.user.uid
-                            
-                            
-                            let user = User(email: email, password: password, firstName: firstName, lastName: lastName, id: userID, picture: "profile.jpg", bookings: [])
-                            
-                            do {
-                                let jsonData = try JSONEncoder().encode(user)
-                                let jsonString = String(data: jsonData, encoding: .utf8)!
-                                sendRequest(jsonString: jsonString)
-                            } catch {
-                                print(error.localizedDescription)
-                            }
-                            
+                        // Check if email is valid
+                        guard email.isValidEmail() else {
+                            // Show alert message
+                            MIC.showAlert(title: "Error", message: "Please enter a valid email address")
+                            return
+                        }
+                        // Check if password is valid
+                        guard isValidPassword(password) else {
+                            // Show alert message
+                            MIC.showAlert(title: "Error", message: "Please enter a valid password (minimum 6 characters with at least one uppercase letter, one special character and one lowercase letter)")
+                            return
                         }
                         
-                            .alert(isPresented: $showAlert) {
-                                Alert(title: Text("Server Response"), message: Text(""), primaryButton: .default(Text("OK")), secondaryButton: nil, tertiaryButton: nil, dismissButton: {
-                                    alertMessage = ""
-                                }, content: {
-                                    Text(alertMessage)
-                                })
-                            }
-                        
-                        func sendRequest(jsonString: String) {
-                            guard let url = URL(string: "https://localhost:8080/users/create") else {
+                        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+                            if let error = error {
+                                print(error)
+                                // Show alert message
+                                MIC.showAlert(title: "Error", message: error.localizedDescription)
                                 return
                             }
-                            var request = URLRequest(url: url)
-                            request.httpMethod = "POST"
-                            request.httpBody = jsonString.data(using: .utf8)
-                            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                            
-                            let session = URLSession.shared
-                            
-                            let task = session.dataTask(with: request) { data, response, error in
-                                guard let data = data, error == nil else {
-                                    print(error?.localizedDescription ?? "Unknown error")
-                                    return
-                                }
-                                if let httpResponse = response as? HTTPURLResponse {
-                                    if (200...299).contains(httpResponse.statusCode) {
-                                        let responseData = String(data: data, encoding: .utf8)!
-                                        DispatchQueue.main.async {
-                                            alertMessage = responseData
-                                            showAlert = true
-                                        }
+                            if let authResult = authResult {
+                                let db = Firestore.firestore()
+                                db.collection("users").addDocument(data: ["isComedian": Comedian, "uid": authResult.user.uid]) { error in
+                                    if let error = error {
+                                        // Show error message
+                                        print("Error saving user data: \(error.localizedDescription)")
+                                        MIC.showAlert(title: "Error", message: "Error saving user data")
                                     } else {
-                                        print("Server Error: \(httpResponse.statusCode)")
+                                        print("User data saved successfully")
                                     }
                                 }
+                                print(authResult.user.uid)
+                                print(authResult.user.displayName ?? "")
+                                userID = authResult.user.uid
+                                
+                                
+                                let user = User(email: email, password: password, firstName: firstName, lastName: lastName, id: Int(userID) ?? 0, picture: "profile.jpg", bookings: [])
+                                
+                                do {
+                                    let jsonData = try JSONEncoder().encode(user)
+                                    let jsonString = String(data: jsonData, encoding: .utf8)!
+                                    sendRequest(jsonString: jsonString)
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                                
                             }
-                            task.resume()
-                        }
+                            
+                            
+                            func sendRequest(jsonString: String) {
+                                guard let url = URL(string: "https://localhost:8080/users/create") else {
+                                    return
+                                }
+                                var request = URLRequest(url: url)
+                                request.httpMethod = "POST"
+                                request.httpBody = jsonString.data(using: .utf8)
+                                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                                
+                                let session = URLSession.shared
+                                
+                                let task = session.dataTask(with: request) { data, response, error in
+                                    guard let data = data, error == nil else {
+                                        print(error?.localizedDescription ?? "Unknown error")
+                                        return
+                                    }
+                                    if let httpResponse = response as? HTTPURLResponse {
+                                        if (200...299).contains(httpResponse.statusCode) {
+                                            let responseData = String(data: data, encoding: .utf8)!
+                                            DispatchQueue.main.async {
+                                                alertMessage = responseData
+                                                showAlert = true
+                                            }
+                                        } else {
+                                            print("Server Error: \(httpResponse.statusCode)")
+                                        }
+                                    }
+                                }
+                                task.resume()
+                            }
+                            
                         
-                    
 
+                        }
+                    }label: {
+                        // Button label
+                        Text("Create New Account")
+                            .foregroundColor(.black)
+                            .font(.title3)
+                            .bold()
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(RoundedRectangle(cornerRadius: 10)
+                                .fill(Color.white))
+                            .padding(.horizontal)
                     }
-                }label: {
-                    // Button label
-                    Text("Create New Account")
-                        .foregroundColor(.black)
-                        .font(.title3)
-                        .bold()
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 10)
-                            .fill(Color.white))
-                        .padding(.horizontal)
                 }
+                
 
             }
+        }.alert(isPresented: $showAlert) {
+            Alert(title: Text("Response"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
     }
 }
