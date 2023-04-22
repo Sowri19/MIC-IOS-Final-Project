@@ -18,6 +18,28 @@
 		83068B1929EF520A006962EA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 83068B1829EF520A006962EA /* GoogleService-Info.plist */; };
 		83068B1C29EF5341006962EA /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 83068B1B29EF5341006962EA /* FirebaseAuth */; };
 		83068B1E29EF5341006962EA /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 83068B1D29EF5341006962EA /* FirebaseFirestore */; };
+		838EE67229F1E36400804AA5 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE67129F1E36400804AA5 /* Constant.swift */; };
+		838EE67429F1E46900804AA5 /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE67329F1E46900804AA5 /* FooterView.swift */; };
+		838EE67629F1EB3300804AA5 /* NavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE67529F1EB3300804AA5 /* NavigationBarView.swift */; };
+		838EE67829F1EDEB00804AA5 /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE67729F1EDEB00804AA5 /* LogoView.swift */; };
+		838EE67A29F2008E00804AA5 /* BannerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE67929F2008E00804AA5 /* BannerModel.swift */; };
+		838EE67C29F2026F00804AA5 /* CodableBundleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE67B29F2026F00804AA5 /* CodableBundleExtension.swift */; };
+		838EE67E29F205C400804AA5 /* FeaturedComedianView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE67D29F205C400804AA5 /* FeaturedComedianView.swift */; };
+		838EE68029F206DA00804AA5 /* FeaturedTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE67F29F206DA00804AA5 /* FeaturedTabView.swift */; };
+		838EE68229F21E2600804AA5 /* ComedyClubModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE68129F21E2600804AA5 /* ComedyClubModel.swift */; };
+		838EE68429F2205400804AA5 /* ComedyClubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE68329F2205400804AA5 /* ComedyClubView.swift */; };
+		838EE68629F2231100804AA5 /* ComedyClubGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE68529F2231100804AA5 /* ComedyClubGridView.swift */; };
+		838EE68829F2C89800804AA5 /* SectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE68729F2C89800804AA5 /* SectionView.swift */; };
+		838EE68A29F2CCC500804AA5 /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE68929F2CCC500804AA5 /* TitleView.swift */; };
+		838EE68C29F3312B00804AA5 /* ComedianModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE68B29F3312B00804AA5 /* ComedianModel.swift */; };
+		838EE68E29F331D100804AA5 /* ComedianView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE68D29F331D100804AA5 /* ComedianView.swift */; };
+		838EE69029F33AE200804AA5 /* ComedyCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE68F29F33AE200804AA5 /* ComedyCategory.swift */; };
+		838EE69229F33B8700804AA5 /* ComedyCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE69129F33B8700804AA5 /* ComedyCategoryView.swift */; };
+		838EE69429F33C9900804AA5 /* ComedyCategoryGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE69329F33C9900804AA5 /* ComedyCategoryGridView.swift */; };
+		838EE69829F346C800804AA5 /* ComedianDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE69729F346C800804AA5 /* ComedianDetailView.swift */; };
+		838EE69A29F34B2200804AA5 /* NavigationBarDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE69929F34B2200804AA5 /* NavigationBarDetailView.swift */; };
+		838EE69C29F34F1500804AA5 /* HeaderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE69B29F34F1500804AA5 /* HeaderDetailView.swift */; };
+		838EE69E29F350CE00804AA5 /* TopPartDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE69D29F350CE00804AA5 /* TopPartDetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +53,29 @@
 		83068B1429EF4791006962EA /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		83068B1629EF4970006962EA /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		83068B1829EF520A006962EA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		838EE66B29F1DEBD00804AA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		838EE67129F1E36400804AA5 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		838EE67329F1E46900804AA5 /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
+		838EE67529F1EB3300804AA5 /* NavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarView.swift; sourceTree = "<group>"; };
+		838EE67729F1EDEB00804AA5 /* LogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
+		838EE67929F2008E00804AA5 /* BannerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerModel.swift; sourceTree = "<group>"; };
+		838EE67B29F2026F00804AA5 /* CodableBundleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableBundleExtension.swift; sourceTree = "<group>"; };
+		838EE67D29F205C400804AA5 /* FeaturedComedianView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedComedianView.swift; sourceTree = "<group>"; };
+		838EE67F29F206DA00804AA5 /* FeaturedTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedTabView.swift; sourceTree = "<group>"; };
+		838EE68129F21E2600804AA5 /* ComedyClubModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedyClubModel.swift; sourceTree = "<group>"; };
+		838EE68329F2205400804AA5 /* ComedyClubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedyClubView.swift; sourceTree = "<group>"; };
+		838EE68529F2231100804AA5 /* ComedyClubGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedyClubGridView.swift; sourceTree = "<group>"; };
+		838EE68729F2C89800804AA5 /* SectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionView.swift; sourceTree = "<group>"; };
+		838EE68929F2CCC500804AA5 /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
+		838EE68B29F3312B00804AA5 /* ComedianModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianModel.swift; sourceTree = "<group>"; };
+		838EE68D29F331D100804AA5 /* ComedianView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianView.swift; sourceTree = "<group>"; };
+		838EE68F29F33AE200804AA5 /* ComedyCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedyCategory.swift; sourceTree = "<group>"; };
+		838EE69129F33B8700804AA5 /* ComedyCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedyCategoryView.swift; sourceTree = "<group>"; };
+		838EE69329F33C9900804AA5 /* ComedyCategoryGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedyCategoryGridView.swift; sourceTree = "<group>"; };
+		838EE69729F346C800804AA5 /* ComedianDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianDetailView.swift; sourceTree = "<group>"; };
+		838EE69929F34B2200804AA5 /* NavigationBarDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarDetailView.swift; sourceTree = "<group>"; };
+		838EE69B29F34F1500804AA5 /* HeaderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderDetailView.swift; sourceTree = "<group>"; };
+		838EE69D29F350CE00804AA5 /* TopPartDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopPartDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,11 +110,13 @@
 		83068AFF29EF3BD8006962EA /* MIC */ = {
 			isa = PBXGroup;
 			children = (
+				83068B0E29EF3C0D006962EA /* Views */,
+				838EE67029F1E30E00804AA5 /* App */,
+				838EE66F29F1E2F400804AA5 /* Utility */,
+				838EE66B29F1DEBD00804AA5 /* Info.plist */,
 				83068B1829EF520A006962EA /* GoogleService-Info.plist */,
 				83068B1129EF4304006962EA /* Extensions */,
-				83068B0E29EF3C0D006962EA /* Views */,
-				83068B0029EF3BD8006962EA /* MICApp.swift */,
-				83068B0229EF3BD8006962EA /* ContentView.swift */,
+				838EE66E29F1E2E000804AA5 /* Model */,
 				83068B0429EF3BD8006962EA /* Assets.xcassets */,
 				83068B0629EF3BD8006962EA /* Preview Content */,
 			);
@@ -87,6 +134,8 @@
 		83068B0E29EF3C0D006962EA /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				838EE66D29F1E2C400804AA5 /* Home */,
+				838EE66C29F1E2B200804AA5 /* Detail */,
 				83068B0F29EF3C34006962EA /* LoginView.swift */,
 				83068B1429EF4791006962EA /* SignUpView.swift */,
 				83068B1629EF4970006962EA /* AuthView.swift */,
@@ -98,8 +147,67 @@
 			isa = PBXGroup;
 			children = (
 				83068B1229EF433C006962EA /* String.swift */,
+				838EE67B29F2026F00804AA5 /* CodableBundleExtension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		838EE66C29F1E2B200804AA5 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				838EE69929F34B2200804AA5 /* NavigationBarDetailView.swift */,
+				838EE69B29F34F1500804AA5 /* HeaderDetailView.swift */,
+				838EE69D29F350CE00804AA5 /* TopPartDetailView.swift */,
+			);
+			path = Detail;
+			sourceTree = "<group>";
+		};
+		838EE66D29F1E2C400804AA5 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				838EE67329F1E46900804AA5 /* FooterView.swift */,
+				838EE67529F1EB3300804AA5 /* NavigationBarView.swift */,
+				838EE67729F1EDEB00804AA5 /* LogoView.swift */,
+				838EE67D29F205C400804AA5 /* FeaturedComedianView.swift */,
+				838EE67F29F206DA00804AA5 /* FeaturedTabView.swift */,
+				838EE68329F2205400804AA5 /* ComedyClubView.swift */,
+				838EE68529F2231100804AA5 /* ComedyClubGridView.swift */,
+				838EE68729F2C89800804AA5 /* SectionView.swift */,
+				838EE68929F2CCC500804AA5 /* TitleView.swift */,
+				838EE68D29F331D100804AA5 /* ComedianView.swift */,
+				838EE69129F33B8700804AA5 /* ComedyCategoryView.swift */,
+				838EE69329F33C9900804AA5 /* ComedyCategoryGridView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		838EE66E29F1E2E000804AA5 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				838EE67929F2008E00804AA5 /* BannerModel.swift */,
+				838EE68129F21E2600804AA5 /* ComedyClubModel.swift */,
+				838EE68B29F3312B00804AA5 /* ComedianModel.swift */,
+				838EE68F29F33AE200804AA5 /* ComedyCategory.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		838EE66F29F1E2F400804AA5 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				838EE67129F1E36400804AA5 /* Constant.swift */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
+		838EE67029F1E30E00804AA5 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				83068B0029EF3BD8006962EA /* MICApp.swift */,
+				83068B0229EF3BD8006962EA /* ContentView.swift */,
+				838EE69729F346C800804AA5 /* ComedianDetailView.swift */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -180,12 +288,34 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				838EE67229F1E36400804AA5 /* Constant.swift in Sources */,
+				838EE68429F2205400804AA5 /* ComedyClubView.swift in Sources */,
+				838EE68829F2C89800804AA5 /* SectionView.swift in Sources */,
 				83068B1029EF3C34006962EA /* LoginView.swift in Sources */,
+				838EE67E29F205C400804AA5 /* FeaturedComedianView.swift in Sources */,
 				83068B1529EF4791006962EA /* SignUpView.swift in Sources */,
 				83068B1729EF4970006962EA /* AuthView.swift in Sources */,
+				838EE69A29F34B2200804AA5 /* NavigationBarDetailView.swift in Sources */,
 				83068B0329EF3BD8006962EA /* ContentView.swift in Sources */,
+				838EE69829F346C800804AA5 /* ComedianDetailView.swift in Sources */,
+				838EE68E29F331D100804AA5 /* ComedianView.swift in Sources */,
+				838EE68629F2231100804AA5 /* ComedyClubGridView.swift in Sources */,
+				838EE69029F33AE200804AA5 /* ComedyCategory.swift in Sources */,
+				838EE68029F206DA00804AA5 /* FeaturedTabView.swift in Sources */,
+				838EE67829F1EDEB00804AA5 /* LogoView.swift in Sources */,
+				838EE68C29F3312B00804AA5 /* ComedianModel.swift in Sources */,
+				838EE67429F1E46900804AA5 /* FooterView.swift in Sources */,
+				838EE67A29F2008E00804AA5 /* BannerModel.swift in Sources */,
+				838EE67C29F2026F00804AA5 /* CodableBundleExtension.swift in Sources */,
+				838EE68A29F2CCC500804AA5 /* TitleView.swift in Sources */,
 				83068B1329EF433C006962EA /* String.swift in Sources */,
+				838EE69229F33B8700804AA5 /* ComedyCategoryView.swift in Sources */,
+				838EE69E29F350CE00804AA5 /* TopPartDetailView.swift in Sources */,
+				838EE68229F21E2600804AA5 /* ComedyClubModel.swift in Sources */,
+				838EE69C29F34F1500804AA5 /* HeaderDetailView.swift in Sources */,
 				83068B0129EF3BD8006962EA /* MICApp.swift in Sources */,
+				838EE67629F1EB3300804AA5 /* NavigationBarView.swift in Sources */,
+				838EE69429F33C9900804AA5 /* ComedyCategoryGridView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -316,11 +446,12 @@
 				DEVELOPMENT_ASSET_PATHS = "\"MIC/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MIC/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -344,11 +475,12 @@
 				DEVELOPMENT_ASSET_PATHS = "\"MIC/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MIC/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
