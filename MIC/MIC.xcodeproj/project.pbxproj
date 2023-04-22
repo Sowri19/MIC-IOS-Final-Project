@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		23C429D229F3ACB900F9E1AB /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C429D129F3ACB900F9E1AB /* User.swift */; };
+		23C429D429F3AEFD00F9E1AB /* Booking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C429D329F3AEFD00F9E1AB /* Booking.swift */; };
 		83068B0129EF3BD8006962EA /* MICApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83068B0029EF3BD8006962EA /* MICApp.swift */; };
 		83068B0329EF3BD8006962EA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83068B0229EF3BD8006962EA /* ContentView.swift */; };
 		83068B0529EF3BD8006962EA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83068B0429EF3BD8006962EA /* Assets.xcassets */; };
@@ -43,6 +45,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		23C429D129F3ACB900F9E1AB /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		23C429D329F3AEFD00F9E1AB /* Booking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Booking.swift; sourceTree = "<group>"; };
 		83068AFD29EF3BD8006962EA /* MIC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MIC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		83068B0029EF3BD8006962EA /* MICApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MICApp.swift; sourceTree = "<group>"; };
 		83068B0229EF3BD8006962EA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -188,6 +192,8 @@
 				838EE68129F21E2600804AA5 /* ComedyClubModel.swift */,
 				838EE68B29F3312B00804AA5 /* ComedianModel.swift */,
 				838EE68F29F33AE200804AA5 /* ComedyCategory.swift */,
+				23C429D129F3ACB900F9E1AB /* User.swift */,
+				23C429D329F3AEFD00F9E1AB /* Booking.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -296,6 +302,7 @@
 				83068B1529EF4791006962EA /* SignUpView.swift in Sources */,
 				83068B1729EF4970006962EA /* AuthView.swift in Sources */,
 				838EE69A29F34B2200804AA5 /* NavigationBarDetailView.swift in Sources */,
+				23C429D229F3ACB900F9E1AB /* User.swift in Sources */,
 				83068B0329EF3BD8006962EA /* ContentView.swift in Sources */,
 				838EE69829F346C800804AA5 /* ComedianDetailView.swift in Sources */,
 				838EE68E29F331D100804AA5 /* ComedianView.swift in Sources */,
@@ -306,6 +313,7 @@
 				838EE68C29F3312B00804AA5 /* ComedianModel.swift in Sources */,
 				838EE67429F1E46900804AA5 /* FooterView.swift in Sources */,
 				838EE67A29F2008E00804AA5 /* BannerModel.swift in Sources */,
+				23C429D429F3AEFD00F9E1AB /* Booking.swift in Sources */,
 				838EE67C29F2026F00804AA5 /* CodableBundleExtension.swift in Sources */,
 				838EE68A29F2CCC500804AA5 /* TitleView.swift in Sources */,
 				83068B1329EF433C006962EA /* String.swift in Sources */,

@@ -12,7 +12,14 @@ import Firebase
 struct SignUpView: View {
     @State private var email: String = ""
     @State private var password: String = ""
+    @State private var firstName: String = ""
+    @State private var lastName: String = ""
+    @State private var picture: String = ""
+    @State private var bookings = [Booking]()
     @State private var Comedian = false
+    
+    @State private var showAlert = false
+    @State private var alertMessage = ""
 
     @Binding var currentShowingView: String
     @AppStorage("uid") var userID: String = ""
@@ -61,6 +68,22 @@ struct SignUpView: View {
                             .fontWeight(.bold)
                             .foregroundColor(isValidPassword(password) ? .green : .red)
                     }
+                }
+                .foregroundColor(.white)
+                .padding()
+                .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.white))
+                .padding()
+                HStack {
+                    Text("First Name: " + firstName)
+                    TextField("Enter your first name", text: $firstName)
+                }
+                .foregroundColor(.white)
+                .padding()
+                .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.white))
+                .padding()
+                HStack {
+                    Text("Last Name: " + lastName)
+                    TextField("Enter your last name", text: $lastName)
                 }
                 .foregroundColor(.white)
                 .padding()
@@ -133,7 +156,60 @@ struct SignUpView: View {
                             print(authResult.user.uid)
                             print(authResult.user.displayName ?? "")
                             userID = authResult.user.uid
+                            
+                            
+                            let user = User(email: email, password: password, firstName: firstName, lastName: lastName, id: userID, picture: "profile.jpg", bookings: [])
+                            
+                            do {
+                                let jsonData = try JSONEncoder().encode(user)
+                                let jsonString = String(data: jsonData, encoding: .utf8)!
+                                sendRequest(jsonString: jsonString)
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            
                         }
+                        
+                            .alert(isPresented: $showAlert) {
+                                Alert(title: Text("Server Response"), message: Text(""), primaryButton: .default(Text("OK")), secondaryButton: nil, tertiaryButton: nil, dismissButton: {
+                                    alertMessage = ""
+                                }, content: {
+                                    Text(alertMessage)
+                                })
+                            }
+                        
+                        func sendRequest(jsonString: String) {
+                            guard let url = URL(string: "https://localhost:8080/users/create") else {
+                                return
+                            }
+                            var request = URLRequest(url: url)
+                            request.httpMethod = "POST"
+                            request.httpBody = jsonString.data(using: .utf8)
+                            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                            
+                            let session = URLSession.shared
+                            
+                            let task = session.dataTask(with: request) { data, response, error in
+                                guard let data = data, error == nil else {
+                                    print(error?.localizedDescription ?? "Unknown error")
+                                    return
+                                }
+                                if let httpResponse = response as? HTTPURLResponse {
+                                    if (200...299).contains(httpResponse.statusCode) {
+                                        let responseData = String(data: data, encoding: .utf8)!
+                                        DispatchQueue.main.async {
+                                            alertMessage = responseData
+                                            showAlert = true
+                                        }
+                                    } else {
+                                        print("Server Error: \(httpResponse.statusCode)")
+                                    }
+                                }
+                            }
+                            task.resume()
+                        }
+                        
+                    
 
                     }
                 }label: {
@@ -153,6 +229,9 @@ struct SignUpView: View {
         }
     }
 }
+
+
+
 private func showAlert(title: String, message: String) {
     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -161,5 +240,8 @@ private func showAlert(title: String, message: String) {
         window.rootViewController?.present(alert, animated: true, completion: nil)
     }
 }
+
+
+
 
 
