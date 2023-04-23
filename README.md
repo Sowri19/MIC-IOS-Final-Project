@@ -1,8 +1,8 @@
 # MIC-IOS-Final-Project
 
 INFO 6350 
-Sowri
-Rikin
+Satya Korturti Sowri - 
+Rikin Parekh - 001543515
 
 For the INFO 6350 final project, we have built a booking reservations and rating system for comedy clubs in the country. Since there is no platform online that exclusively caters to comedy fans that want to go watch their favorite comedians perform at comedy clubs nearby. We want to build a system where comedy fans, comedy club owners, and comedians can interact using this iOS app.
 
