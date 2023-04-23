@@ -38,15 +38,16 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity createUser(@RequestHeader HttpHeaders headers, @RequestBody JsonNode user) throws IOException {
+    public ResponseEntity createUser(@RequestBody String user) throws IOException {
 
-        if(!validateUser(user)){
-            ResponseEntity.badRequest().body("Invalid User Data");
-        } else {
-            return ResponseEntity.ok(dao.save(user));
-        }
+//        if(!validateUser(user)){
+//            ResponseEntity.badRequest().body("Invalid User Data");
+//        } else {
+        JsonNode u = mapper.readTree(user);
+            return ResponseEntity.ok(dao.save(u));
+//        }
 
-        return null;
+//        return null;
 
     }
 
