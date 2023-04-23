@@ -15,7 +15,7 @@ struct SignUpView: View {
     @State private var firstName: String = ""
     @State private var lastName: String = ""
     @State private var picture: String = ""
-    @State private var bookings = [Booking]()
+    @State private var bookings = []
     @State private var Comedian = false
     
     
@@ -25,6 +25,8 @@ struct SignUpView: View {
 
     @Binding var currentShowingView: String
     @AppStorage("uid") var userID: String = ""
+    
+    
     
     private func isValidPassword(_ password: String) -> Bool{
         // minimum 6 characters long
@@ -76,7 +78,7 @@ struct SignUpView: View {
                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.white))
                 .padding()
                 HStack {
-                    Text("First Name: " + firstName)
+//                    Text("First Name: " + firstName)
                     TextField("Enter your first name", text: $firstName)
                 }
                 .foregroundColor(.white)
@@ -84,7 +86,7 @@ struct SignUpView: View {
                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.white))
                 .padding()
                 HStack {
-                    Text("Last Name: " + lastName)
+//                    Text("Last Name: " + lastName)
                     TextField("Enter your last name", text: $lastName)
                 }
                 .foregroundColor(.white)
@@ -165,9 +167,23 @@ struct SignUpView: View {
                                 let user = User(email: email, password: password, firstName: firstName, lastName: lastName, id: Int(userID) ?? 0, picture: "profile.jpg", bookings: [])
                                 
                                 do {
-                                    let jsonData = try JSONEncoder().encode(user)
+                                    
+                                    let body = [
+                                        "id": userID,
+                                        "email": email,
+                                        "password": password,
+                                        "firstName": firstName,
+                                        "lastName": lastName,
+                                        "picture": user.picture
+                                    ]
+                                    let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
                                     let jsonString = String(data: jsonData, encoding: .utf8)!
-                                    sendRequest(jsonString: jsonString)
+                                    print(jsonString)
+//                                    var jsonData = try JSONEncoder().encode(user)
+//                                    var jsonString = String(data: jsonData, encoding: .utf8)
+//                                    var jsonString = "userId=300&title=My urgent task&completed=false"
+//                                    let jsonNode = try objectMapper.readTree(data: data)
+                                    sendRequest(jsonString)
                                 } catch {
                                     print(error.localizedDescription)
                                 }
@@ -175,18 +191,26 @@ struct SignUpView: View {
                             }
                             
                             
-                            func sendRequest(jsonString: String) {
-                                guard let url = URL(string: "https://localhost:8080/users/create") else {
+                            func sendRequest(_ payload: String?) {
+                                guard let url = URL(string: "http://localhost:8080/users/create") else {
                                     return
                                 }
+                                
                                 var request = URLRequest(url: url)
                                 request.httpMethod = "POST"
-                                request.httpBody = jsonString.data(using: .utf8)
                                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                                
+                                request.httpBody = payload?.data(using: .utf8)
+//                                request.httpBody = components.query?.data(using: .utf8)
+//                                request.httpBody = payload
+                                
+//                                request.httpBody = try? JSONSerialization.data(withJSONObject: jsonString)
+                                
+                                
                                 
                                 let session = URLSession.shared
                                 
-                                let task = session.dataTask(with: request) { data, response, error in
+                                let task = session.dataTask(with: request){ data, response, error in
                                     guard let data = data, error == nil else {
                                         print(error?.localizedDescription ?? "Unknown error")
                                         return

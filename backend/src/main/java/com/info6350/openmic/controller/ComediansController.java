@@ -40,12 +40,13 @@ public class ComediansController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity createComedian(@RequestHeader HttpHeaders headers, @RequestBody JsonNode comedian) throws IOException {
+    public ResponseEntity createComedian(@RequestBody String comedian) throws IOException {
 
 //        if(!validateClub(club)){
 //            ResponseEntity.badRequest().body("Invalid Club Data");
 //        } else {
-        return ResponseEntity.ok(dao.save(comedian));
+        JsonNode com = mapper.readTree(comedian);
+        return ResponseEntity.ok(dao.save(com));
 //        }
 //
 //        return null;
