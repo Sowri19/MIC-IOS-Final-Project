@@ -17,6 +17,7 @@ struct SignUpView: View {
     @State private var picture: String = ""
     @State private var bookings = []
     @State private var Comedian = false
+    @State private var ComedyClub = false
     
     
     
@@ -26,7 +27,9 @@ struct SignUpView: View {
     @Binding var currentShowingView: String
     @AppStorage("uid") var userID: String = ""
     
-    
+    @AppStorage("isComedian") var isComedian: Bool = false
+    @AppStorage("isComedyClub") var isComedyClub: Bool = false
+    @AppStorage("isDocumentID") var isDocumentID: String = ""
     
     private func isValidPassword(_ password: String) -> Bool{
         // minimum 6 characters long
@@ -39,6 +42,7 @@ struct SignUpView: View {
         ZStack{
             Color.black.edgesIgnoringSafeArea(.all)
             VStack{
+                Spacer()
                 HStack{
                     Text("Create an Account!")
                         .foregroundColor(.white)
@@ -112,6 +116,25 @@ struct SignUpView: View {
                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.white))
                 .padding()
                 
+                HStack{
+                    Image(systemName: "person")
+                    Toggle("Comedy Club?", isOn: $ComedyClub)
+                    Spacer()
+                    if(ComedyClub){
+                        Image(systemName: "checkmark")
+                            .fontWeight(.bold)
+                            .foregroundColor(.green)
+                    }else{
+                        Image(systemName: "xmark")
+                            .fontWeight(.bold)
+                            .foregroundColor(.red)
+                    }
+                }
+                .foregroundColor(.white)
+                .padding()
+                .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.white))
+                .padding()
+                
                 Group {
                     Button(action: {
                         withAnimation{self.currentShowingView = "login"}
@@ -140,7 +163,13 @@ struct SignUpView: View {
                             MIC.showAlert(title: "Error", message: "Please enter a valid password (minimum 6 characters with at least one uppercase letter, one special character and one lowercase letter)")
                             return
                         }
-                        
+                        // Check if both toggles are selected(Comedian and Comedy Club)
+                        guard !(Comedian && ComedyClub) else {
+                            // Show alert message
+                            MIC.showAlert(title: "Error", message: "Please select only one option between Comedian and Comedy Club")
+                            return
+                        }
+
                         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
                             if let error = error {
                                 print(error)
@@ -150,7 +179,9 @@ struct SignUpView: View {
                             }
                             if let authResult = authResult {
                                 let db = Firestore.firestore()
-                                db.collection("users").addDocument(data: ["isComedian": Comedian, "uid": authResult.user.uid]) { error in
+                                let docData: [String: Any] = ["isComedian": Comedian, "isComedyClub": ComedyClub, "uid": authResult.user.uid]
+
+                                let docRef = db.collection("users").addDocument(data: docData) { error in
                                     if let error = error {
                                         // Show error message
                                         print("Error saving user data: \(error.localizedDescription)")
@@ -159,15 +190,28 @@ struct SignUpView: View {
                                         print("User data saved successfully")
                                     }
                                 }
+
+                                docRef.getDocument { (document, error) in
+                                    if let document = document, document.exists {
+                                        self.isDocumentID = document.documentID
+                                        self.isComedian = document.data()?["isComedian"] as? Bool ?? false
+                                        self.isComedyClub = document.data()?["isComedyClub"] as? Bool ?? false
+
+                                           print("Document ID: \(document.documentID)")
+                                           print("isComedian: \(isComedian)")
+                                           print("isComedyClub: \(isComedyClub)")
+                                        print("Document ID: \(document.documentID)")
+                                    } else {
+                                        print("Error retrieving document ID: \(error?.localizedDescription ?? "unknown error")")
+                                    }
+                                }
+
                                 print(authResult.user.uid)
                                 print(authResult.user.displayName ?? "")
                                 userID = authResult.user.uid
                                 
-                                
                                 let user = User(email: email, password: password, firstName: firstName, lastName: lastName, id: Int(userID) ?? 0, picture: "profile.jpg", bookings: [])
-                                
                                 do {
-                                    
                                     let body = [
                                         "id": userID,
                                         "email": email,
@@ -190,7 +234,6 @@ struct SignUpView: View {
                                 
                             }
                             
-                            
                             func sendRequest(_ payload: String?) {
                                 guard let url = URL(string: "http://localhost:8080/users/create") else {
                                     return
@@ -205,8 +248,6 @@ struct SignUpView: View {
 //                                request.httpBody = payload
                                 
 //                                request.httpBody = try? JSONSerialization.data(withJSONObject: jsonString)
-                                
-                                
                                 
                                 let session = URLSession.shared
                                 
@@ -229,9 +270,7 @@ struct SignUpView: View {
                                 }
                                 task.resume()
                             }
-                            
-                        
-
+  
                         }
                     }label: {
                         // Button label
@@ -246,7 +285,6 @@ struct SignUpView: View {
                             .padding(.horizontal)
                     }
                 }
-                
 
             }
         }.alert(isPresented: $showAlert) {
