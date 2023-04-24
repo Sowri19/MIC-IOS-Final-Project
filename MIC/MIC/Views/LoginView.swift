@@ -7,10 +7,16 @@
 
 import SwiftUI
 import FirebaseAuth
+import Firebase
 
 struct LoginView: View {
     @Binding var currentShowingView: String
+    
     @AppStorage("uid") var userID: String = ""
+    
+    @AppStorage("isComedian") var isComedian: Bool = false
+    @AppStorage("isComedyClub") var isComedyClub: Bool = false
+     
     @State private var email: String = ""
     @State private var password: String = ""
     
@@ -25,6 +31,7 @@ struct LoginView: View {
         ZStack{
             Color.white.edgesIgnoringSafeArea(.all)
             VStack{
+                Spacer()
                 HStack{
                     Text("Welcome Back!")
                         .font(.largeTitle)
@@ -81,6 +88,28 @@ struct LoginView: View {
                             print(authResult.user.uid)
                             withAnimation {
                                 userID = authResult.user.uid
+                                let db = Firestore.firestore()
+                                db.collection("users").whereField("uid", isEqualTo: userID).getDocuments { (querySnapshot, error) in
+                                    if let error = error {
+                                        print("Error getting documents: \(error.localizedDescription)")
+                                    } else {
+                                        if let document = querySnapshot?.documents.first {
+                                            let documentID = document.documentID
+                                            // Use the retrieved documentID as needed
+                                            // Get the values of isComedian and isComedyClub
+                                            let data = document.data()
+                                            if let isComedian = data["isComedian"] as? Bool {
+                                                self.isComedian = isComedian
+                                            }
+                                            if let isComedyClub = data["isComedyClub"] as? Bool {
+                                                self.isComedyClub = isComedyClub
+                                            }
+                                            print("Retrieved document ID: \(documentID)")
+                                        } else {
+                                            print("No matching documents found")
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -95,6 +124,7 @@ struct LoginView: View {
                             .fill(Color.black))
                         .padding(.horizontal)
                 }
+
             }
         }
     }
