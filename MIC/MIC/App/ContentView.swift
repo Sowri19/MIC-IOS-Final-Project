@@ -70,7 +70,7 @@ struct ContentView: View {
                     
                 } else if isComedian {
                     // Navigation Bar View -- from here
-                    NavigationBarView()
+                    NavigationBarComedianView()
                         .padding(.horizontal, 15)
                         .padding(.bottom)
                         .padding(.top, UIApplication.shared.connectedScenes
@@ -96,9 +96,33 @@ struct ContentView: View {
                         Text("Sign Out")
                     } // :Login ID and Sign out Button
                     Text("welcome comedian")
+                    
+                    ScrollView(.vertical, showsIndicators: false, content:{
+                        VStack(spacing: 0){
+                            ComedianUserDetailView(title: "Your Events")
+                            FooterView()
+                                .padding(.horizontal)
+                        } //:VStack
+                    }) //: SCROLL
+                    Spacer()
+                    Button {
+                        
+                    } label: {
+                        // Button label
+                        Text("Create New Event")
+                            .foregroundColor(.black)
+                            .font(.title3)
+                            .bold()
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(RoundedRectangle(cornerRadius: 10)
+                                .fill(Color.yellow))
+                            .padding(.horizontal)
+                    }
+                   
                 } else if isComedyClub {
                     // Navigation Bar View -- from here
-                    NavigationBarView()
+                    NavigationBarComedyClubView()
                         .padding(.horizontal, 15)
                         .padding(.bottom)
                         .padding(.top, UIApplication.shared.connectedScenes
@@ -124,6 +148,16 @@ struct ContentView: View {
                         Text("Sign Out")
                     } // :Login ID and Sign out Button
                     Text("welcome comedy club")
+                    
+                    
+                    ScrollView(.vertical, showsIndicators: false, content:{
+                        VStack(spacing: 0){
+                             
+                            FooterView()
+                                .padding(.horizontal)
+                        } //:VStack
+                    }) //: SCROLL
+                    
                 }
             } //: VSTACK
             .background(colorBackground.ignoresSafeArea(.all, edges: .all))
