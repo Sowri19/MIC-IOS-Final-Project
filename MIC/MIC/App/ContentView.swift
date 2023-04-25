@@ -80,23 +80,6 @@ struct ContentView: View {
                         .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 5)
                     // : Navigation Bar -- till here
                     
-                    // Login ID and Sign out Button
-                    Text("Logged In! \nYour user id is \(userID)")
-                    Button(action: {
-                        let firebaseAuth = Auth.auth()
-                        do {
-                          try firebaseAuth.signOut()
-                            withAnimation{
-                                userID = ""
-                            }
-                        } catch let signOutError as NSError {
-                          print("Error signing out: %@", signOutError)
-                        }
-                    }){
-                        Text("Sign Out")
-                    } // :Login ID and Sign out Button
-                    Text("welcome comedian")
-                    
                     ScrollView(.vertical, showsIndicators: false, content:{
                         VStack(spacing: 0){
                             ComedianUserDetailView(title: "Your Events")
