@@ -18,7 +18,7 @@ struct FooterView: View {
                 .renderingMode(.template)
                 .foregroundColor(.gray)
                 .layoutPriority(0)
-            Text("Copyright MIC\nAll Rights Reserved")
+            Text("© Copyright MIC\nAll Rights Reserved")
                 .font(.footnote)
                 .fontWeight(.bold)
                 .foregroundColor(.gray)

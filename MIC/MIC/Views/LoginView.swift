@@ -125,7 +125,7 @@ struct LoginView: View {
                         .padding(.horizontal)
                 }
 
-            }
-        }
+            } //: VStack
+        } //: ZStack
     }
 }
