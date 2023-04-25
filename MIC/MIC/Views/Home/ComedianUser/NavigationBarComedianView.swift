@@ -6,20 +6,16 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct NavigationBarComedianView: View {
     // MARK: - PROPERTIES
+    @AppStorage("uid") var userID: String = ""
     @State private var isAnimated: Bool = false
     // MARK: - BODY
 
     var body: some View {
         HStack{
-            Button(action: {}, label:{
-                Image(systemName: "magnifyingglass")
-                    .font(.title)
-                    .foregroundColor(.black)
-            }) //: Button
-            Spacer()
             LogoView()
                 .opacity(isAnimated ? 1 : 0)
                 .offset(x: 0, y: isAnimated ? 0 : -25)
@@ -28,7 +24,32 @@ struct NavigationBarComedianView: View {
                         isAnimated.toggle()
                     }
                 })
+            Button(action: {}, label:{
+                Image(systemName: "magnifyingglass")
+                    .font(.title)
+                    .foregroundColor(.black)
+            }) //: Button
+
             Spacer()
+            Button(action: {
+                let firebaseAuth = Auth.auth()
+                do {
+                  try firebaseAuth.signOut()
+                  withAnimation{
+                      userID = ""
+                  }
+                } catch let signOutError as NSError {
+                  print("Error signing out: %@", signOutError)
+                }
+              }){
+                Text("Logout")
+                  .foregroundColor(.white)
+                  .padding(.horizontal, 10)
+                  .padding(.vertical, 5)
+                  .background(Color.red)
+                  .cornerRadius(10)
+                  .frame(width: 90, height: 30)
+              }
             Button(action: {
                
             }, label:{
