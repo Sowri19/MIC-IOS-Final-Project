@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NavigationBarDetailView: View {
+struct NavigationBarComedianDetailView: View {
     // MARK: - PROPERTY
     
     // MARK: - BODY
@@ -31,9 +31,9 @@ struct NavigationBarDetailView: View {
     }
 }
 
-struct NavigationBarDetailView_Previews: PreviewProvider {
+struct NavigationBarComedianDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationBarDetailView()
+        NavigationBarComedianDetailView()
             .previewLayout(.sizeThatFits)
             .padding()
             .background(Color.gray)

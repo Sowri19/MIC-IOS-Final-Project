@@ -26,6 +26,10 @@
 		8326D16A29F74DB8007C6831 /* NavigationBarComedyClubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8326D16929F74DB8007C6831 /* NavigationBarComedyClubView.swift */; };
 		8326D16C29F750B4007C6831 /* ComedyClubProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8326D16B29F750B4007C6831 /* ComedyClubProfileView.swift */; };
 		8326D16E29F750C7007C6831 /* ComedianProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8326D16D29F750C7007C6831 /* ComedianProfileView.swift */; };
+		8326D17229F895EB007C6831 /* CustomShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8326D17129F895EB007C6831 /* CustomShape.swift */; };
+		8326D17429F89885007C6831 /* RatingsSizesDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8326D17329F89885007C6831 /* RatingsSizesDetailView.swift */; };
+		8326D17629F89D7E007C6831 /* QuantityFavoriteDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8326D17529F89D7E007C6831 /* QuantityFavoriteDetailView.swift */; };
+		8326D17829F89F8F007C6831 /* AddToCartDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8326D17729F89F8F007C6831 /* AddToCartDetailView.swift */; };
 		838EE67229F1E36400804AA5 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE67129F1E36400804AA5 /* Constant.swift */; };
 		838EE67429F1E46900804AA5 /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE67329F1E46900804AA5 /* FooterView.swift */; };
 		838EE67629F1EB3300804AA5 /* NavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE67529F1EB3300804AA5 /* NavigationBarView.swift */; };
@@ -45,7 +49,7 @@
 		838EE69229F33B8700804AA5 /* ComedyCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE69129F33B8700804AA5 /* ComedyCategoryView.swift */; };
 		838EE69429F33C9900804AA5 /* ComedyCategoryGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE69329F33C9900804AA5 /* ComedyCategoryGridView.swift */; };
 		838EE69829F346C800804AA5 /* ComedianDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE69729F346C800804AA5 /* ComedianDetailView.swift */; };
-		838EE69A29F34B2200804AA5 /* NavigationBarDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE69929F34B2200804AA5 /* NavigationBarDetailView.swift */; };
+		838EE69A29F34B2200804AA5 /* NavigationBarDetailComedianView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE69929F34B2200804AA5 /* NavigationBarDetailComedianView.swift */; };
 		838EE69C29F34F1500804AA5 /* HeaderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE69B29F34F1500804AA5 /* HeaderDetailView.swift */; };
 		838EE69E29F350CE00804AA5 /* TopPartDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE69D29F350CE00804AA5 /* TopPartDetailView.swift */; };
 /* End PBXBuildFile section */
@@ -69,6 +73,10 @@
 		8326D16929F74DB8007C6831 /* NavigationBarComedyClubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarComedyClubView.swift; sourceTree = "<group>"; };
 		8326D16B29F750B4007C6831 /* ComedyClubProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedyClubProfileView.swift; sourceTree = "<group>"; };
 		8326D16D29F750C7007C6831 /* ComedianProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianProfileView.swift; sourceTree = "<group>"; };
+		8326D17129F895EB007C6831 /* CustomShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomShape.swift; sourceTree = "<group>"; };
+		8326D17329F89885007C6831 /* RatingsSizesDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingsSizesDetailView.swift; sourceTree = "<group>"; };
+		8326D17529F89D7E007C6831 /* QuantityFavoriteDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuantityFavoriteDetailView.swift; sourceTree = "<group>"; };
+		8326D17729F89F8F007C6831 /* AddToCartDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToCartDetailView.swift; sourceTree = "<group>"; };
 		838EE66B29F1DEBD00804AA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		838EE67129F1E36400804AA5 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		838EE67329F1E46900804AA5 /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
@@ -89,7 +97,7 @@
 		838EE69129F33B8700804AA5 /* ComedyCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedyCategoryView.swift; sourceTree = "<group>"; };
 		838EE69329F33C9900804AA5 /* ComedyCategoryGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedyCategoryGridView.swift; sourceTree = "<group>"; };
 		838EE69729F346C800804AA5 /* ComedianDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianDetailView.swift; sourceTree = "<group>"; };
-		838EE69929F34B2200804AA5 /* NavigationBarDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarDetailView.swift; sourceTree = "<group>"; };
+		838EE69929F34B2200804AA5 /* NavigationBarDetailComedianView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarDetailComedianView.swift; sourceTree = "<group>"; };
 		838EE69B29F34F1500804AA5 /* HeaderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderDetailView.swift; sourceTree = "<group>"; };
 		838EE69D29F350CE00804AA5 /* TopPartDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopPartDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -191,9 +199,12 @@
 		838EE66C29F1E2B200804AA5 /* Detail */ = {
 			isa = PBXGroup;
 			children = (
-				838EE69929F34B2200804AA5 /* NavigationBarDetailView.swift */,
 				838EE69B29F34F1500804AA5 /* HeaderDetailView.swift */,
+				838EE69929F34B2200804AA5 /* NavigationBarDetailComedianView.swift */,
+				8326D17329F89885007C6831 /* RatingsSizesDetailView.swift */,
 				838EE69D29F350CE00804AA5 /* TopPartDetailView.swift */,
+				8326D17529F89D7E007C6831 /* QuantityFavoriteDetailView.swift */,
+				8326D17729F89F8F007C6831 /* AddToCartDetailView.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -236,6 +247,7 @@
 			isa = PBXGroup;
 			children = (
 				838EE67129F1E36400804AA5 /* Constant.swift */,
+				8326D17129F895EB007C6831 /* CustomShape.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -330,13 +342,16 @@
 			files = (
 				838EE67229F1E36400804AA5 /* Constant.swift in Sources */,
 				838EE68429F2205400804AA5 /* ComedyClubView.swift in Sources */,
+				8326D17229F895EB007C6831 /* CustomShape.swift in Sources */,
 				838EE68829F2C89800804AA5 /* SectionView.swift in Sources */,
 				83068B1029EF3C34006962EA /* LoginView.swift in Sources */,
 				8326D16429F74886007C6831 /* ComedianUserDetailView.swift in Sources */,
 				838EE67E29F205C400804AA5 /* FeaturedComedianView.swift in Sources */,
+				8326D17629F89D7E007C6831 /* QuantityFavoriteDetailView.swift in Sources */,
+				8326D17829F89F8F007C6831 /* AddToCartDetailView.swift in Sources */,
 				83068B1529EF4791006962EA /* SignUpView.swift in Sources */,
 				83068B1729EF4970006962EA /* AuthView.swift in Sources */,
-				838EE69A29F34B2200804AA5 /* NavigationBarDetailView.swift in Sources */,
+				838EE69A29F34B2200804AA5 /* NavigationBarDetailComedianView.swift in Sources */,
 				23C429D229F3ACB900F9E1AB /* User.swift in Sources */,
 				8326D16229F7410B007C6831 /* NavigationBarComedianView.swift in Sources */,
 				83068B0329EF3BD8006962EA /* ContentView.swift in Sources */,
@@ -344,6 +359,7 @@
 				838EE68E29F331D100804AA5 /* ComedianView.swift in Sources */,
 				838EE68629F2231100804AA5 /* ComedyClubGridView.swift in Sources */,
 				838EE69029F33AE200804AA5 /* ComedyCategory.swift in Sources */,
+				8326D17429F89885007C6831 /* RatingsSizesDetailView.swift in Sources */,
 				838EE68029F206DA00804AA5 /* FeaturedTabView.swift in Sources */,
 				8326D16629F74C5F007C6831 /* ComedyClubDetailView.swift in Sources */,
 				838EE67829F1EDEB00804AA5 /* LogoView.swift in Sources */,
