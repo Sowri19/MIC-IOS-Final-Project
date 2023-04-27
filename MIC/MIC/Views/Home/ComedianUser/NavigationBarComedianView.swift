@@ -170,7 +170,7 @@ struct ProfileView: View {
                         }
                     }
                 }
-               
+                
                 
                 VStack{
                     //  Fetched Comedian View from the database
@@ -309,7 +309,9 @@ struct ProfileView: View {
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10)
-                        .fill(Color.white))
+                            .fill(Color.white))
+                    //                        .padding(.horizontal)
+
                 }
                 Spacer()
             }
