@@ -151,6 +151,25 @@ struct ComClubProfileView: View {
                 }
                 .padding()
                 .padding(.top)
+                .onAppear {
+                    fetchUserData { (data, error) in
+                        if let data = data?.data(using: .utf8) {
+                            do {
+                                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                                         print(json)
+                                        
+                                        
+                                    
+                                    }
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                            
+                        } else if let error = error {
+                            // Handle the error
+                        }
+                    }
+                }
                     //  Fetched Comedy Club View from the database
                 ScrollView(.vertical, showsIndicators: true, content:{
                     VStack{
@@ -296,6 +315,45 @@ struct ComClubProfileView: View {
         .preferredColorScheme(.dark)
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Response"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+        }
+    }
+    
+    func fetchUserData(completion: @escaping (String?, Error?) -> Void) {
+        
+        do {
+            guard let url = URL(string: "http://localhost:8080/users/get/\(userID)") else {
+                return
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//            let jsonString = ""
+//            request.httpBody = jsonString.data(using: .utf8)
+            
+            let session = URLSession.shared
+            
+            let task = session.dataTask(with: request){ data, response, error in
+                guard let data = data, error == nil else {
+                    print(error?.localizedDescription ?? "Unknown error")
+                    return
+                }
+                if let httpResponse = response as? HTTPURLResponse {
+                    if (200...299).contains(httpResponse.statusCode) {
+                        let responseData = String(data: data, encoding: .utf8)!
+                        DispatchQueue.main.async {
+                            alertMessage = responseData
+                            showAlert = true
+                            completion(responseData, nil)
+                        }
+                    } else {
+                        print("Server Error: \(httpResponse.statusCode)")
+                    }
+                }
+            }
+            task.resume()
+        } catch {
+            print(error.localizedDescription)
         }
     }
 }

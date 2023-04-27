@@ -160,6 +160,9 @@ struct ProfileView: View {
                             do {
                                     if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                                          print(json)
+                                        
+                                        
+                                    
                                     }
                                 } catch {
                                     print(error.localizedDescription)
