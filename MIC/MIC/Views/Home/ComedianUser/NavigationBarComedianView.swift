@@ -55,56 +55,15 @@ struct ImagePicker: UIViewControllerRepresentable {
         }
     }
 }
+
 struct NavigationBarComedianView: View {
     // MARK: - PROPERTIES
-        @State private var firstName: String = ""
-        @State private var lastName: String = ""
-        @State private var Genre: String = ""
-        @State var bio: String = ""
+    
     @AppStorage("uid") var userID: String = ""
     @State private var isAnimated: Bool = false
     @State private var showProfileView: Bool = false // New state variable
 
     // MARK: - BODY
-    func fetchUserData(completion: @escaping (String?, Error?) -> Void) {
-        
-        do {
-            guard let url = URL(string: "http://localhost:8080/users/get/\(userID)") else {
-                return
-            }
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-//            let jsonString = ""
-//            request.httpBody = jsonString.data(using: .utf8)
-            
-            let session = URLSession.shared
-            
-            let task = session.dataTask(with: request){ data, response, error in
-                guard let data = data, error == nil else {
-                    print(error?.localizedDescription ?? "Unknown error")
-                    return
-                }
-                if let httpResponse = response as? HTTPURLResponse {
-                    if (200...299).contains(httpResponse.statusCode) {
-                        let responseData = String(data: data, encoding: .utf8)!
-                        DispatchQueue.main.async {
-//                            alertMessage = responseData
-//                            showAlert = true
-                            completion(responseData, nil)
-                        }
-                    } else {
-                        print("Server Error: \(httpResponse.statusCode)")
-                    }
-                }
-            }
-            task.resume()
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-    
     var body: some View {
         HStack{
             LogoView()
@@ -142,45 +101,31 @@ struct NavigationBarComedianView: View {
                   .frame(width: 90, height: 30)
               }
             Button(action: {
-                fetchUserData { (data, error) in
-                    if let data = data?.data(using: .utf8) {
-                        do {
-                            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                                firstName = json["firstName"] as? String ?? ""
-                                lastName = json["lastName"] as? String ?? ""
-                                Genre = json["genre"] as? String ?? ""
-                                bio = json["bio"] as? String ?? ""
-                            }
-                        } catch {
-                            print(error.localizedDescription)
+                showProfileView = true // Set the state variable to true to show the view
+                    }, label:{
+                        ZStack {
+                            Image(systemName: "person.circle")
+                                .font(.title)
+                                .foregroundColor(.black)
                         }
-                    } else if let error = error {
-                        // Handle the error
-                    }
+                    }) //: Button
                 }
-                            showProfileView = true // Set the state variable to true to show the view
-                
-                        }, label:{
-                            ZStack {
-                                Image(systemName: "person.circle")
-                                    .font(.title)
-                                    .foregroundColor(.black)
-                            }
-                        }) //: Button
-                    }
-                    .sheet(isPresented: $showProfileView) {
-                        // Present the ProfileView modally
-                        ProfileView(firstName: $firstName, lastName: $lastName, Genre: $Genre, bio: $bio)
-                    }
+                .sheet(isPresented: $showProfileView) {
+                    // Present the ProfileView modally
+                    ProfileView()
                 }
             }
+        }
 
 struct ProfileView: View {
     
-    @Binding var firstName: String
-    @Binding var lastName: String
-    @Binding var Genre: String
-    @Binding var bio: String
+    @State private var firstName: String = ""
+    @State private var lastName: String = ""
+    @State private var Genre: String = ""
+    @State private var Bio: String = ""
+    
+    @State private var genre: String = ""
+    @State private var bio: String = ""
     
     @State private var showAlert = false
     @State private var alertMessage = ""
@@ -191,11 +136,44 @@ struct ProfileView: View {
     @State var userData = [String: Any]()
     
     @AppStorage("uid") var userID: String = ""
-    @AppStorage("isComedian") var isComedian: Bool = false
-    @AppStorage("isComedyClub") var isComedyClub: Bool = false
-    @AppStorage("isDocumentID") var isDocumentID: String = ""
-    @AppStorage("profileImage") var profileImage: String = ""
     
+    func fetchUserData(completion: @escaping (String?, Error?) -> Void) {
+        do {
+            guard let url = URL(string: "http://localhost:8080/users/get/\(userID)") else {
+                return
+            }
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    //            let jsonString = ""
+    //            request.httpBody = jsonString.data(using: .utf8)
+            
+            let session = URLSession.shared
+            
+            let task = session.dataTask(with: request){ data, response, error in
+                guard let data = data, error == nil else {
+                    print(error?.localizedDescription ?? "Unknown error")
+                    return
+                }
+                if let httpResponse = response as? HTTPURLResponse {
+                    if (200...299).contains(httpResponse.statusCode) {
+                        let responseData = String(data: data, encoding: .utf8)!
+                        DispatchQueue.main.async {
+    //                            alertMessage = responseData
+    //                            showAlert = true
+                            completion(responseData, nil)
+                        }
+                    } else {
+                        print("Server Error: \(httpResponse.statusCode)")
+                    }
+                }
+            }
+            task.resume()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+
     var body: some View {
         ZStack{
             Color.black.edgesIgnoringSafeArea(.all)
@@ -210,7 +188,24 @@ struct ProfileView: View {
                 }
                 .padding()
                 .padding(.top)
-                
+                .onAppear(){
+                    fetchUserData { (data, error) in
+                        if let data = data?.data(using: .utf8) {
+                            do {
+                                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                                    firstName = json["firstName"] as? String ?? ""
+                                    lastName = json["lastName"] as? String ?? ""
+                                    Genre = json["genre"] as? String ?? ""
+                                    Bio = json["bio"] as? String ?? ""
+                                }
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                        } else if let error = error {
+                            // Handle the error
+                        }
+                    }
+                }
                 VStack{
                     //  Fetched Comedian View from the database
                     ScrollView(.vertical, showsIndicators: true, content:{
@@ -233,35 +228,38 @@ struct ProfileView: View {
                                 Text("First Name:")
                                     .font(.headline)
                                 TextField("Enter First Name", text: $firstName)
+                                    .disabled(true)
                                 Text("Last Name:")
                                     .font(.headline)
                                 TextField("Enter Last Name", text: $lastName)
+                                    .disabled(true)
                                 Text("Your Genre:")
                                     .font(.headline)
                                 TextField("Your Genre", text: $Genre)
+                                    .disabled(true)
                                 Text("Your Bio:")
                                     .font(.headline)
-                                TextField("Bio", text: $bio)
+                                TextField("Bio", text: $Bio)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .disabled(true)
                             }
                         }
                         .padding()
                     })
                 }
-
+                
                 HStack {
-                    //                    Text("First Name: " + firstName)
-                    Image(systemName: "pencil.and.outline")
-                    TextField("Write your Bio", text: $bio)
+                    Image(systemName: "list.bullet.clipboard")
+                    TextField("What is your Genre", text: $genre)
                 }
                 .foregroundColor(.white)
                 .padding()
                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.white))
                 .padding()
-                
-                HStack {
 
-                    Image(systemName: "list.bullet.clipboard")
-                    TextField("What is your Genre", text: $Genre)
+                HStack {
+                    Image(systemName: "pencil.and.outline")
+                    TextField("Write your Bio", text: $bio)
                 }
                 .foregroundColor(.white)
                 .padding()
@@ -299,7 +297,7 @@ struct ProfileView: View {
                         let body = [
                             "id": userID,
                             //                            "picture": base64ImageString ?? "",
-                            "genre": Genre,
+                            "genre": genre,
                             "bio": bio
                         ] as [String : Any]
                         let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
@@ -334,6 +332,26 @@ struct ProfileView: View {
                             }
                         }
                         task.resume()
+                        
+                        fetchUserData { (data, error) in
+                            if let data = data?.data(using: .utf8) {
+                                do {
+                                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                                        firstName = json["firstName"] as? String ?? ""
+                                        lastName = json["lastName"] as? String ?? ""
+                                        Genre = json["genre"] as? String ?? ""
+                                        Bio = json["bio"] as? String ?? ""
+                                    }
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                            } else if let error = error {
+                                // Handle the error
+                            }
+                        }
+                        
+                    genre = ""
+                    bio = ""
                     } catch {
                         print(error.localizedDescription)
                     }
@@ -347,9 +365,11 @@ struct ProfileView: View {
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10)
-                )}
+                        .fill(Color.green))
+                        .padding(.horizontal)
+                }
                 Spacer()
-                                    }
+            }
         }
         .preferredColorScheme(.dark)
         .alert(isPresented: $showAlert) {
