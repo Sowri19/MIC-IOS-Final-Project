@@ -20,6 +20,7 @@ struct ContentView: View {
     @AppStorage("uid") var userID: String = ""
     @AppStorage("isComedian") var isComedian: Bool = false
     @AppStorage("isComedyClub") var isComedyClub: Bool = false
+    @State private var CreateEvent: Bool = false // New state variable
     
     var body: some View {
         ZStack {
@@ -66,7 +67,7 @@ struct ContentView: View {
                                     ComedianView()
                                         .onTapGesture {
                                             withAnimation(.easeOut){
-//                                                Bookings.selectedBooking = ComedianModel
+                                                //                                                Bookings.selectedBooking = ComedianModel
                                                 Bookings.showingBooking = true
                                             }
                                         }
@@ -101,6 +102,7 @@ struct ContentView: View {
                         }) //: SCROLL
                         
                         
+                        
                     } else if isComedyClub {
                         // Navigation Bar View -- from here
                         NavigationBarComedyClubView()
@@ -120,8 +122,28 @@ struct ContentView: View {
                                     .padding(.horizontal)
                             } //:VStack
                         }) //: SCROLL
-                    }
-                } //: VSTACK
+                        Button(action: {
+                            CreateEvent = true // Set the state variable to true to show the view
+                            
+                        }, label: {
+                            // Button label
+                            Text("Create Event")
+                                .foregroundColor(.black)
+                                .font(.title3)
+                                .bold()
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.yellow))
+                                .padding(.horizontal)
+                        })
+                        Spacer()
+                    } //: VSTACK
+                }
+                .sheet(isPresented: $CreateEvent) {
+                    // Present the ProfileView modally
+                    ComClubCreateEventView()
+                }
                 .background(colorBackground.ignoresSafeArea(.all, edges: .all))
             } else {
                 ComedianDetailView()
@@ -132,11 +154,156 @@ struct ContentView: View {
     // MARK: - <#placeholder#>
 
 }
+struct ComClubCreateEventView: View {
+    
+    @State private var EventName: String = ""
+    @State private var Description: String = ""
+    @State private var Price: Int = 0
+    @State var date = Date()
+    @State var ComedianName: String = ""
+    
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+
+    @State private var selectedImage: UIImage?
+    @State private var showImagePicker = false
+
+
+    @AppStorage("uid") var userID: String = ""
+    @AppStorage("isComedian") var isComedian: Bool = false
+    @AppStorage("isComedyClub") var isComedyClub: Bool = false
+    @AppStorage("isDocumentID") var isDocumentID: String = ""
+    @AppStorage("profileImage") var profileImage: String = ""
+
+    
+    var body: some View {
+       
+        ZStack{
+            Color.yellow.edgesIgnoringSafeArea(.all)
+            ScrollView(.vertical, showsIndicators: false, content:{
+                VStack{
+                    
+                    HStack{
+                        Text("Create New Event!")
+                            .foregroundColor(.black)
+                            .font(.largeTitle)
+                            .bold()
+                        Spacer()
+                    }
+                    .padding()
+                    .padding(.top)
+                    
+                    if let image = selectedImage {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 80, height: 80)
+                            .clipShape(Circle())
+                    } else {
+                        Image(systemName: "person.circle")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .clipShape(Circle())
+                    }
+                    HStack {
+                        Image(systemName: "list")
+                        TextField("Event Name", text: $EventName)
+                    }
+                    .foregroundColor(.black)
+                    .padding()
+                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
+                    .padding()
+                    
+                    HStack {
+                        
+                        Image(systemName: "list")
+                        TextField("Description", text: $Description)
+                    }
+                    .foregroundColor(.white)
+                    .padding()
+                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
+                    .padding()
+                    
+                    HStack {
+                        Image(systemName: "list")
+                        TextField("", text: Binding<String>(
+                            get: { String(self.Price) },
+                            set: { self.Price = Int($0) ?? 0 }
+                        ))}
+                        .foregroundColor(.black)
+                        .padding()
+                        .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
+                        .padding()
+
+                    HStack {
+                        Image(systemName: "list")
+                        DatePicker("Date", selection: $date, displayedComponents: .date)
+                            .datePickerStyle(.compact)
+                    }
+                    .foregroundColor(.black)
+                    .padding()
+                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
+                    .padding()
+                    
+                    HStack {
+                        //                    Text("First Name: " + firstName)
+                        Image(systemName: "list")
+                        TextField("Comedian Name", text: $ComedianName)
+                    }
+                    .foregroundColor(.white)
+                    .padding()
+                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
+                    .padding()
+                    
+                    HStack{
+                        Button(action: {
+                            self.showImagePicker = true
+                        }){
+                            Text("Select Image")
+                                .foregroundColor(.white)
+                                .font(.title3)
+                                .bold()
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.black))
+                                .padding(.horizontal)
+                            
+                        }
+                    }
+                    .sheet(isPresented: $showImagePicker) {
+                        ImagePicker(selectedImage: $selectedImage, sourceType: .photoLibrary)
+                    }
+                    Spacer()
+                    Button{
+                        
+                    }label: {
+                        // Button label
+                        Text("Create")
+                            .foregroundColor(.white)
+                            .font(.title3)
+                            .bold()
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(RoundedRectangle(cornerRadius: 10)
+                                .fill(Color.black))
+                            .padding(.horizontal)
+                    }
+                    
+                }
+            }) //:Scroll
+        }.alert(isPresented: $showAlert) {
+            Alert(title: Text("Response"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+        }
+        }
+}
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
             .previewDevice("iPhone 14 Pro")
             .environmentObject(Bookings())
-        
+            .preferredColorScheme(.dark)
     }
 }
