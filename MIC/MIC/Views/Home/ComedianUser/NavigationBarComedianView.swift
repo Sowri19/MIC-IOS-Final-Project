@@ -57,10 +57,6 @@ struct ImagePicker: UIViewControllerRepresentable {
 }
 struct NavigationBarComedianView: View {
     // MARK: - PROPERTIES
-    let firstName = "John"
-    let lastName = "Doe"
-    let profilePicture = Image(systemName: "person.circle")
-    let bio = "I am a comedian who loves to make people laugh."
 
     @AppStorage("uid") var userID: String = ""
     @State private var isAnimated: Bool = false
@@ -116,18 +112,17 @@ struct NavigationBarComedianView: View {
                     }
                     .sheet(isPresented: $showProfileView) {
                         // Present the ProfileView modally
-                        ProfileView(profilePicture: profilePicture, bio: bio)
+                        ProfileView()
                     }
                 }
             }
+
 struct ProfileView: View {
     
     @State private var firstName: String = ""
     @State private var lastName: String = ""
     @State private var Genre: String = ""
-    @State var profilePicture: Image
     @State var bio: String = ""
-
     @State private var showAlert = false
     @State private var alertMessage = ""
 
@@ -141,7 +136,6 @@ struct ProfileView: View {
     @AppStorage("isDocumentID") var isDocumentID: String = ""
     @AppStorage("profileImage") var profileImage: String = ""
 
-    
     var body: some View {
         ZStack{
             Color.black.edgesIgnoringSafeArea(.all)
@@ -156,23 +150,6 @@ struct ProfileView: View {
                 }
                 .padding()
                 .padding(.top)
-        
-                VStack {
-                    profilePicture
-                        .resizable()
-                        .scaledToFit()
-                        .clipShape(Circle())
-                        .frame(width: 120, height: 120)
-                    
-                    Text(firstName + " " + lastName)
-                        .font(.title)
-                        .fontWeight(.bold)
-                    
-                    Text(bio)
-                        .padding(.horizontal)
-                        .multilineTextAlignment(.center)
-                }
-                .padding()
                     
                 if let image = selectedImage {
                     Image(uiImage: image)
@@ -192,9 +169,7 @@ struct ProfileView: View {
                 HStack {
 //                    Text("First Name: " + firstName)
                     Image(systemName: "pencil.and.outline")
-                    TextField("Write your Bio", text: $firstName)
-                        
-                        
+                    TextField("Write your Bio", text: $bio)
                 }
                 .foregroundColor(.white)
                 .padding()
@@ -205,8 +180,6 @@ struct ProfileView: View {
 //                    Text("First Name: " + firstName)
                     Image(systemName: "pencil.and.outline")
                     TextField("What is your Genre", text: $Genre)
-                        
-                        
                 }
                 .foregroundColor(.white)
                 .padding()
