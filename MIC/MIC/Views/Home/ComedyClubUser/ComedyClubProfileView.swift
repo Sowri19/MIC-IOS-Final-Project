@@ -16,5 +16,6 @@ struct ComedyClubProfileView: View {
 struct ComedyClubProfileView_Previews: PreviewProvider {
     static var previews: some View {
         ComedyClubProfileView()
+            .preferredColorScheme(.light)
     }
 }

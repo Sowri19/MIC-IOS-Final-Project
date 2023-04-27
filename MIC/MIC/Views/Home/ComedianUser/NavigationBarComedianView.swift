@@ -142,7 +142,7 @@ struct ProfileView: View {
             VStack{
                 Spacer()
                 HStack{
-                    Text("Your Profile")
+                    Text("Welcome \(firstName)!!\nYour Profile")
                         .foregroundColor(.white)
                         .font(.largeTitle)
                         .bold()
@@ -150,22 +150,42 @@ struct ProfileView: View {
                 }
                 .padding()
                 .padding(.top)
-                    
-                if let image = selectedImage {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 80, height: 80)
-                        .clipShape(Circle())
-                } else {
-                    Image(systemName: "person.circle")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 80, height: 80)
-                        .foregroundColor(.gray)
-                        .clipShape(Circle())
+                VStack{
+                    //  Fetched Comedian View from the database
+                    ScrollView(.vertical, showsIndicators: true, content:{
+                        VStack{
+                            if let image = selectedImage {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 80, height: 80)
+                                    .clipShape(Circle())
+                            } else {
+                                Image(systemName: "person.circle")
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 80, height: 80)
+                                    .foregroundColor(.gray)
+                                    .clipShape(Circle())
+                            }
+                            LazyVGrid(columns: [GridItem(.flexible(), spacing: 20), GridItem(.flexible(), spacing: 20)]) {
+                                Text("First Name:")
+                                    .font(.headline)
+                                TextField("Enter First Name", text: $firstName)
+                                Text("Last Name:")
+                                    .font(.headline)
+                                TextField("Enter Last Name", text: $lastName)
+                                Text("Your Genre:")
+                                    .font(.headline)
+                                TextField("Your Genre", text: $Genre)
+                                Text("Your Bio:")
+                                    .font(.headline)
+                                TextField("Bio", text: $bio)
+                            }
+                        }
+                        .padding()
+                    })
                 }
-            
                 HStack {
 //                    Text("First Name: " + firstName)
                     Image(systemName: "pencil.and.outline")
@@ -177,8 +197,8 @@ struct ProfileView: View {
                 .padding()
                 
                 HStack {
-//                    Text("First Name: " + firstName)
-                    Image(systemName: "pencil.and.outline")
+
+                    Image(systemName: "list.bullet.clipboard")
                     TextField("What is your Genre", text: $Genre)
                 }
                 .foregroundColor(.white)
@@ -191,12 +211,12 @@ struct ProfileView: View {
                         self.showImagePicker = true
                     }){
                         Text("Select Image")
-                        .foregroundColor(.black)
-                        .font(.title3)
-                        .bold()
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(.black)
+                            .font(.title3)
+                            .bold()
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(RoundedRectangle(cornerRadius: 10)
                             .fill(Color.white))
                         .padding(.horizontal)
                         
@@ -266,11 +286,13 @@ struct ProfileView: View {
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10)
                         .fill(Color.white))
-//                        .padding(.horizontal)
+                        .padding(.horizontal)
                 }
                 Spacer()
             }
-        }.alert(isPresented: $showAlert) {
+        }
+        .preferredColorScheme(.dark)
+        .alert(isPresented: $showAlert) {
             Alert(title: Text("Response"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
     }
