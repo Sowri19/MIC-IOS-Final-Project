@@ -154,7 +154,6 @@ struct ProfileView: View {
                 }
                 .padding()
                 .padding(.top)
-<<<<<<< HEAD
                 .onAppear {
                     fetchUserData { (data, error) in
                         if let data = data?.data(using: .utf8) {
@@ -171,23 +170,8 @@ struct ProfileView: View {
                         }
                     }
                 }
+               
                 
-                if let image = selectedImage {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 80, height: 80)
-                        .clipShape(Circle())
-                } else {
-                    Image(systemName: "person.circle")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 80, height: 80)
-                        .foregroundColor(.gray)
-                        .clipShape(Circle())
-                }
-                
-=======
                 VStack{
                     //  Fetched Comedian View from the database
                     ScrollView(.vertical, showsIndicators: true, content:{
@@ -224,7 +208,6 @@ struct ProfileView: View {
                         .padding()
                     })
                 }
->>>>>>> origin/main
                 HStack {
                     //                    Text("First Name: " + firstName)
                     Image(systemName: "pencil.and.outline")
@@ -236,13 +219,10 @@ struct ProfileView: View {
                 .padding()
                 
                 HStack {
-<<<<<<< HEAD
                     //                    Text("First Name: " + firstName)
                     Image(systemName: "pencil.and.outline")
-=======
 
                     Image(systemName: "list.bullet.clipboard")
->>>>>>> origin/main
                     TextField("What is your Genre", text: $Genre)
                 }
                 .foregroundColor(.white)
@@ -261,13 +241,8 @@ struct ProfileView: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(RoundedRectangle(cornerRadius: 10)
-<<<<<<< HEAD
-                                .fill(Color.white))
-                            .padding(.horizontal)
-=======
                             .fill(Color.white))
-                        .padding(.horizontal)
->>>>>>> origin/main
+                            .padding(.horizontal)
                         
                     }
                 }
@@ -334,13 +309,7 @@ struct ProfileView: View {
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10)
-<<<<<<< HEAD
-                            .fill(Color.white))
-                    //                        .padding(.horizontal)
-=======
                         .fill(Color.white))
-                        .padding(.horizontal)
->>>>>>> origin/main
                 }
                 Spacer()
             }
