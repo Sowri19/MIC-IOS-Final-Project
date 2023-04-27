@@ -158,7 +158,7 @@ struct ComClubCreateEventView: View {
     
     @State private var EventName: String = ""
     @State private var Description: String = ""
-    @State private var Price: Int = 0
+    @State private var Price: Int?
     @State var date = Date()
     @State var ComedianName: String = ""
     
@@ -168,16 +168,19 @@ struct ComClubCreateEventView: View {
     @State private var selectedImage: UIImage?
     @State private var showImagePicker = false
 
+    let comedians = ["Dave Chappelle", "Trevor Noah", "Ellen DeGeneres", "Amy Schumer"]
+    @State private var selectedComedian = "Dave Chappelle"
 
     @AppStorage("uid") var userID: String = ""
     @AppStorage("isComedian") var isComedian: Bool = false
     @AppStorage("isComedyClub") var isComedyClub: Bool = false
     @AppStorage("isDocumentID") var isDocumentID: String = ""
     @AppStorage("profileImage") var profileImage: String = ""
-
+    
     
     var body: some View {
-       
+        
+
         ZStack{
             Color.yellow.edgesIgnoringSafeArea(.all)
             ScrollView(.vertical, showsIndicators: false, content:{
@@ -185,6 +188,7 @@ struct ComClubCreateEventView: View {
                     
                     HStack{
                         Text("Create New Event!")
+                        
                             .foregroundColor(.black)
                             .font(.largeTitle)
                             .bold()
@@ -205,10 +209,10 @@ struct ComClubCreateEventView: View {
                             .scaledToFill()
                             .frame(width: 80, height: 80)
                             .foregroundColor(.black)
-                            .clipShape(Circle())
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
                     HStack {
-                        Image(systemName: "list")
+                        Image(systemName: "star")
                         TextField("Event Name", text: $EventName)
                     }
                     .foregroundColor(.black)
@@ -218,7 +222,8 @@ struct ComClubCreateEventView: View {
                     
                     HStack {
                         
-                        Image(systemName: "list")
+                        Image(systemName: "chart.bar.doc.horizontal")
+                            .foregroundColor(.black)
                         TextField("Description", text: $Description)
                     }
                     .foregroundColor(.white)
@@ -227,16 +232,14 @@ struct ComClubCreateEventView: View {
                     .padding()
                     
                     HStack {
-                        Image(systemName: "list")
-                        TextField("", text: Binding<String>(
-                            get: { String(self.Price) },
-                            set: { self.Price = Int($0) ?? 0 }
-                        ))}
-                        .foregroundColor(.black)
-                        .padding()
-                        .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
-                        .padding()
-
+                        Image(systemName: "dollarsign.circle")
+                        TextField("price", value: $Price, formatter: NumberFormatter())
+                    }
+                    .foregroundColor(.black)
+                    .padding()
+                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
+                    .padding()
+                    
                     HStack {
                         Image(systemName: "list")
                         DatePicker("Date", selection: $date, displayedComponents: .date)
@@ -247,16 +250,34 @@ struct ComClubCreateEventView: View {
                     .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
                     .padding()
                     
+                    //                    HStack {
+                    //                        Image(systemName: "person.crop.circle.dashed")
+                    //                            .foregroundColor(.black)
+                    //                        TextField("Comedian Name", text: $ComedianName)
+                    //                    }
+                    //                    .foregroundColor(.white)
+                    //                    .padding()
+                    //                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
+                    //                    .padding()
                     HStack {
-                        //                    Text("First Name: " + firstName)
-                        Image(systemName: "list")
-                        TextField("Comedian Name", text: $ComedianName)
-                    }
-                    .foregroundColor(.white)
-                    .padding()
-                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
-                    .padding()
-                    
+                        HStack {
+                            Text("Comedians")
+                            Spacer()
+                        }
+                        .padding(.leading)
+
+                        Picker(selection: $selectedComedian, label: Text("")) {
+                            ForEach(comedians, id: \.self) { color in
+                                Text(color)
+                            }
+                        }
+                        .pickerStyle(MenuPickerStyle())
+                        .foregroundColor(.black)
+                        .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
+                        .frame(height: 20)
+                        .colorScheme(.dark)
+                    }.padding()
+                
                     HStack{
                         Button(action: {
                             self.showImagePicker = true
