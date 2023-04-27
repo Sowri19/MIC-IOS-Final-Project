@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ComedianProfileView: View {
     @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         ScrollView(.vertical, showsIndicators: false, content:{
             

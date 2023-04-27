@@ -30,6 +30,8 @@
 		8326D17429F89885007C6831 /* RatingsSizesDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8326D17329F89885007C6831 /* RatingsSizesDetailView.swift */; };
 		8326D17629F89D7E007C6831 /* QuantityFavoriteDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8326D17529F89D7E007C6831 /* QuantityFavoriteDetailView.swift */; };
 		8326D17829F89F8F007C6831 /* AddToCartDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8326D17729F89F8F007C6831 /* AddToCartDetailView.swift */; };
+		8326D17A29F8D307007C6831 /* Bookings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8326D17929F8D307007C6831 /* Bookings.swift */; };
+		8326D17D29F9C8D1007C6831 /* Navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8326D17C29F9C8D1007C6831 /* Navigate.swift */; };
 		838EE67229F1E36400804AA5 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE67129F1E36400804AA5 /* Constant.swift */; };
 		838EE67429F1E46900804AA5 /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE67329F1E46900804AA5 /* FooterView.swift */; };
 		838EE67629F1EB3300804AA5 /* NavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE67529F1EB3300804AA5 /* NavigationBarView.swift */; };
@@ -77,6 +79,8 @@
 		8326D17329F89885007C6831 /* RatingsSizesDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingsSizesDetailView.swift; sourceTree = "<group>"; };
 		8326D17529F89D7E007C6831 /* QuantityFavoriteDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuantityFavoriteDetailView.swift; sourceTree = "<group>"; };
 		8326D17729F89F8F007C6831 /* AddToCartDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToCartDetailView.swift; sourceTree = "<group>"; };
+		8326D17929F8D307007C6831 /* Bookings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookings.swift; sourceTree = "<group>"; };
+		8326D17C29F9C8D1007C6831 /* Navigate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigate.swift; sourceTree = "<group>"; };
 		838EE66B29F1DEBD00804AA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		838EE67129F1E36400804AA5 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		838EE67329F1E46900804AA5 /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
@@ -196,6 +200,14 @@
 			path = ComedyClubUser;
 			sourceTree = "<group>";
 		};
+		8326D17B29F9C8A9007C6831 /* ComedianUser */ = {
+			isa = PBXGroup;
+			children = (
+				8326D17C29F9C8D1007C6831 /* Navigate.swift */,
+			);
+			path = ComedianUser;
+			sourceTree = "<group>";
+		};
 		838EE66C29F1E2B200804AA5 /* Detail */ = {
 			isa = PBXGroup;
 			children = (
@@ -246,8 +258,10 @@
 		838EE66F29F1E2F400804AA5 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				8326D17B29F9C8A9007C6831 /* ComedianUser */,
 				838EE67129F1E36400804AA5 /* Constant.swift */,
 				8326D17129F895EB007C6831 /* CustomShape.swift */,
+				8326D17929F8D307007C6831 /* Bookings.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -360,9 +374,11 @@
 				838EE68629F2231100804AA5 /* ComedyClubGridView.swift in Sources */,
 				838EE69029F33AE200804AA5 /* ComedyCategory.swift in Sources */,
 				8326D17429F89885007C6831 /* RatingsSizesDetailView.swift in Sources */,
+				8326D17A29F8D307007C6831 /* Bookings.swift in Sources */,
 				838EE68029F206DA00804AA5 /* FeaturedTabView.swift in Sources */,
 				8326D16629F74C5F007C6831 /* ComedyClubDetailView.swift in Sources */,
 				838EE67829F1EDEB00804AA5 /* LogoView.swift in Sources */,
+				8326D17D29F9C8D1007C6831 /* Navigate.swift in Sources */,
 				838EE68C29F3312B00804AA5 /* ComedianModel.swift in Sources */,
 				838EE67429F1E46900804AA5 /* FooterView.swift in Sources */,
 				838EE67A29F2008E00804AA5 /* BannerModel.swift in Sources */,

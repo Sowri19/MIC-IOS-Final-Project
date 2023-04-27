@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ComedianDetailView: View {
     // MARK: - PROPERTY
-    
+    @EnvironmentObject var Bookings: Bookings
     // MARK: - BODY
 
     var body: some View {
@@ -67,6 +67,7 @@ struct ComedianDetailView: View {
 struct ComedianDetailView_Previews: PreviewProvider {
     static var previews: some View {
         ComedianDetailView()
+            .environmentObject(Bookings())
             .previewLayout(.fixed(width: 375, height: 812))
     }
 }
