@@ -57,13 +57,54 @@ struct ImagePicker: UIViewControllerRepresentable {
 }
 struct NavigationBarComedianView: View {
     // MARK: - PROPERTIES
-
+        @State private var firstName: String = ""
+        @State private var lastName: String = ""
+        @State private var Genre: String = ""
+        @State var bio: String = ""
     @AppStorage("uid") var userID: String = ""
     @State private var isAnimated: Bool = false
     @State private var showProfileView: Bool = false // New state variable
 
     // MARK: - BODY
-
+    func fetchUserData(completion: @escaping (String?, Error?) -> Void) {
+        
+        do {
+            guard let url = URL(string: "http://localhost:8080/users/get/\(userID)") else {
+                return
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//            let jsonString = ""
+//            request.httpBody = jsonString.data(using: .utf8)
+            
+            let session = URLSession.shared
+            
+            let task = session.dataTask(with: request){ data, response, error in
+                guard let data = data, error == nil else {
+                    print(error?.localizedDescription ?? "Unknown error")
+                    return
+                }
+                if let httpResponse = response as? HTTPURLResponse {
+                    if (200...299).contains(httpResponse.statusCode) {
+                        let responseData = String(data: data, encoding: .utf8)!
+                        DispatchQueue.main.async {
+//                            alertMessage = responseData
+//                            showAlert = true
+                            completion(responseData, nil)
+                        }
+                    } else {
+                        print("Server Error: \(httpResponse.statusCode)")
+                    }
+                }
+            }
+            task.resume()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
     var body: some View {
         HStack{
             LogoView()
@@ -101,7 +142,24 @@ struct NavigationBarComedianView: View {
                   .frame(width: 90, height: 30)
               }
             Button(action: {
+                fetchUserData { (data, error) in
+                    if let data = data?.data(using: .utf8) {
+                        do {
+                            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                                firstName = json["firstName"] as? String ?? ""
+                                lastName = json["lastName"] as? String ?? ""
+                                Genre = json["genre"] as? String ?? ""
+                                bio = json["bio"] as? String ?? ""
+                            }
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    } else if let error = error {
+                        // Handle the error
+                    }
+                }
                             showProfileView = true // Set the state variable to true to show the view
+                
                         }, label:{
                             ZStack {
                                 Image(systemName: "person.circle")
@@ -112,17 +170,18 @@ struct NavigationBarComedianView: View {
                     }
                     .sheet(isPresented: $showProfileView) {
                         // Present the ProfileView modally
-                        ProfileView()
+                        ProfileView(firstName: $firstName, lastName: $lastName, Genre: $Genre, bio: $bio)
                     }
                 }
             }
 
 struct ProfileView: View {
     
-    @State private var firstName: String = ""
-    @State private var lastName: String = ""
-    @State private var Genre: String = ""
-    @State var bio: String = ""
+    @Binding var firstName: String
+    @Binding var lastName: String
+    @Binding var Genre: String
+    @Binding var bio: String
+    
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var getResponse = [String: Any]()
@@ -130,7 +189,6 @@ struct ProfileView: View {
     @State private var selectedImage: UIImage?
     @State private var showImagePicker = false
     @State var userData = [String: Any]()
-    
     
     @AppStorage("uid") var userID: String = ""
     @AppStorage("isComedian") var isComedian: Bool = false
@@ -142,8 +200,6 @@ struct ProfileView: View {
         ZStack{
             Color.black.edgesIgnoringSafeArea(.all)
             VStack{
-                
-                
                 Spacer()
                 HStack{
                     Text("Welcome \(firstName)!!\nYour Profile")
@@ -154,23 +210,6 @@ struct ProfileView: View {
                 }
                 .padding()
                 .padding(.top)
-                .onAppear {
-                    fetchUserData { (data, error) in
-                        if let data = data?.data(using: .utf8) {
-                            do {
-                                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                                         print(json)
-                                    }
-                                } catch {
-                                    print(error.localizedDescription)
-                                }
-                            
-                        } else if let error = error {
-                            // Handle the error
-                        }
-                    }
-                }
-                
                 
                 VStack{
                     //  Fetched Comedian View from the database
@@ -208,6 +247,7 @@ struct ProfileView: View {
                         .padding()
                     })
                 }
+
                 HStack {
                     //                    Text("First Name: " + firstName)
                     Image(systemName: "pencil.and.outline")
@@ -219,8 +259,6 @@ struct ProfileView: View {
                 .padding()
                 
                 HStack {
-                    //                    Text("First Name: " + firstName)
-                    Image(systemName: "pencil.and.outline")
 
                     Image(systemName: "list.bullet.clipboard")
                     TextField("What is your Genre", text: $Genre)
@@ -243,7 +281,7 @@ struct ProfileView: View {
                             .background(RoundedRectangle(cornerRadius: 10)
                             .fill(Color.white))
                             .padding(.horizontal)
-                        
+
                     }
                 }
                 .sheet(isPresented: $showImagePicker) {
@@ -309,9 +347,6 @@ struct ProfileView: View {
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10)
-                            .fill(Color.white))
-                    //                        .padding(.horizontal)
-
                 }
                 Spacer()
             }
@@ -322,44 +357,6 @@ struct ProfileView: View {
         }
     }
     
-    func fetchUserData(completion: @escaping (String?, Error?) -> Void) {
-        
-        do {
-            guard let url = URL(string: "http://localhost:8080/users/get/\(userID)") else {
-                return
-            }
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-//            let jsonString = ""
-//            request.httpBody = jsonString.data(using: .utf8)
-            
-            let session = URLSession.shared
-            
-            let task = session.dataTask(with: request){ data, response, error in
-                guard let data = data, error == nil else {
-                    print(error?.localizedDescription ?? "Unknown error")
-                    return
-                }
-                if let httpResponse = response as? HTTPURLResponse {
-                    if (200...299).contains(httpResponse.statusCode) {
-                        let responseData = String(data: data, encoding: .utf8)!
-                        DispatchQueue.main.async {
-                            alertMessage = responseData
-                            showAlert = true
-                            completion(responseData, nil)
-                        }
-                    } else {
-                        print("Server Error: \(httpResponse.statusCode)")
-                    }
-                }
-            }
-            task.resume()
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
 }
 
 
