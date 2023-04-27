@@ -214,6 +214,53 @@ struct ComClubProfileView: View {
                 Spacer()
                 Button{
                     
+                    let imageData = selectedImage?.pngData()
+                    let base64ImageString = imageData?.base64EncodedString(options: .lineLength64Characters)
+                                                            
+                    do {
+                        let body = [
+                            "id": userID,
+                            "poc": PointOfContact,
+                            "location": Location,
+                            "picture": base64ImageString
+                        ] as [String : Any]
+                        let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
+                        let jsonString = String(data: jsonData, encoding: .utf8)!
+                        print(jsonString)
+                        guard let url = URL(string: "http://localhost:8080/users/update") else {
+                            return
+                        }
+                                                                                    
+                        var request = URLRequest(url: url)
+                        request.httpMethod = "POST"
+                        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                                                                                    
+                        request.httpBody = jsonString.data(using: .utf8)
+                                                                                    
+                        let session = URLSession.shared
+                                                                                    
+                        let task = session.dataTask(with: request){ data, response, error in
+                        guard let data = data, error == nil else {
+                            print(error?.localizedDescription ?? "Unknown error")
+                            return
+                        }
+                        if let httpResponse = response as? HTTPURLResponse {
+                            if (200...299).contains(httpResponse.statusCode) {
+                                let responseData = String(data: data, encoding: .utf8)!
+                                DispatchQueue.main.async {
+                                    alertMessage = responseData
+                                    showAlert = true
+                                }
+                            } else {
+                            print("Server Error: \(httpResponse.statusCode)")
+                            }
+                        }
+                    }
+                    task.resume()
+                    } catch {
+                    print(error.localizedDescription)
+                    }
+                    
                 }label: {
                     // Button label
                     Text("Update your Profile")
