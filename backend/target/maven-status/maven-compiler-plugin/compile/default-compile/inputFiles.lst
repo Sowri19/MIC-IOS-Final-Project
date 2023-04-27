@@ -1,12 +1,12 @@
-/Users/rikinparekh/Desktop/NEU/INFO6350/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/controller/EventsController.java
-/Users/rikinparekh/Desktop/NEU/INFO6350/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/config/RedisConfig.java
-/Users/rikinparekh/Desktop/NEU/INFO6350/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/repository/UserDAO.java
-/Users/rikinparekh/Desktop/NEU/INFO6350/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/repository/ComedyClubDAO.java
-/Users/rikinparekh/Desktop/NEU/INFO6350/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/controller/ComedyClubController.java
-/Users/rikinparekh/Desktop/NEU/INFO6350/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/controller/ComediansController.java
-/Users/rikinparekh/Desktop/NEU/INFO6350/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/repository/ComediansDAO.java
-/Users/rikinparekh/Desktop/NEU/INFO6350/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/OpenmicApplication.java
-/Users/rikinparekh/Desktop/NEU/INFO6350/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/controller/UserController.java
-/Users/rikinparekh/Desktop/NEU/INFO6350/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/repository/BookingsDAO.java
-/Users/rikinparekh/Desktop/NEU/INFO6350/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/controller/BookingsController.java
-/Users/rikinparekh/Desktop/NEU/INFO6350/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/repository/EventsDAO.java
+/Users/sowri/Documents/IOS-final Project/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/controller/UserController.java
+/Users/sowri/Documents/IOS-final Project/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/repository/EventsDAO.java
+/Users/sowri/Documents/IOS-final Project/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/repository/ComedyClubDAO.java
+/Users/sowri/Documents/IOS-final Project/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/OpenmicApplication.java
+/Users/sowri/Documents/IOS-final Project/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/controller/ComedyClubController.java
+/Users/sowri/Documents/IOS-final Project/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/config/RedisConfig.java
+/Users/sowri/Documents/IOS-final Project/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/controller/EventsController.java
+/Users/sowri/Documents/IOS-final Project/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/repository/ComediansDAO.java
+/Users/sowri/Documents/IOS-final Project/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/repository/BookingsDAO.java
+/Users/sowri/Documents/IOS-final Project/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/controller/BookingsController.java
+/Users/sowri/Documents/IOS-final Project/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/repository/UserDAO.java
+/Users/sowri/Documents/IOS-final Project/MIC-IOS-Final-Project/backend/src/main/java/com/info6350/openmic/controller/ComediansController.java
