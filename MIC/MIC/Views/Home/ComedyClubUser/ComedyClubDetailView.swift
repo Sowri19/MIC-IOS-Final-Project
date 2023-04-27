@@ -30,5 +30,6 @@ struct ComedyClubDetailView_Previews: PreviewProvider {
         ComedyClubDetailView(title: "Your Events")
             .previewLayout(.sizeThatFits)
             .background(colorBackground)
+            .preferredColorScheme(.dark)
     }
 }

@@ -118,6 +118,7 @@ struct NavigationBarComedyClubView: View {
                     }
                 }
 }
+
 struct ComClubProfileView: View {
     
     @State private var firstName: String = ""
@@ -135,17 +136,14 @@ struct ComClubProfileView: View {
     @AppStorage("uid") var userID: String = ""
     @AppStorage("isComedian") var isComedian: Bool = false
     @AppStorage("isComedyClub") var isComedyClub: Bool = false
-    @AppStorage("isDocumentID") var isDocumentID: String = ""
-    @AppStorage("profileImage") var profileImage: String = ""
 
-    
     var body: some View {
         ZStack{
             Color.black.edgesIgnoringSafeArea(.all)
             VStack{
                 Spacer()
                 HStack{
-                    Text("Your Profile")
+                    Text("Welcome \(firstName)!!\nYour Profile")
                         .foregroundColor(.white)
                         .font(.largeTitle)
                         .bold()
@@ -153,22 +151,41 @@ struct ComClubProfileView: View {
                 }
                 .padding()
                 .padding(.top)
-                    
-                if let image = selectedImage {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 80, height: 80)
-                        .clipShape(Circle())
-                } else {
-                    Image(systemName: "person.circle")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 80, height: 80)
-                        .foregroundColor(.gray)
-                        .clipShape(Circle())
-                }
-            
+                    //  Fetched Comedy Club View from the database
+                ScrollView(.vertical, showsIndicators: true, content:{
+                    VStack{
+                        if let image = selectedImage {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 80, height: 80)
+                                .clipShape(Circle())
+                        } else {
+                            Image(systemName: "person.circle")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 80, height: 80)
+                                .foregroundColor(.gray)
+                                .clipShape(Circle())
+                        }
+                        LazyVGrid(columns: [GridItem(.flexible(), spacing: 20), GridItem(.flexible(), spacing: 20)]) {
+                                   Text("First Name:")
+                                .font(.headline)
+                                   TextField("Enter First Name", text: $firstName)
+                                   Text("Last Name:")
+                                .font(.headline)
+                                   TextField("Enter Last Name", text: $lastName)
+                                   Text("Point of Contact:")
+                                .font(.headline)
+                                   TextField("Enter Point of Contact", text: $PointOfContact)
+                                   Text("Location:")
+                                .font(.headline)
+                            TextField("Enter Location", text: $Location)
+                               }
+                    }
+                    .padding()
+                })
+                               
                 HStack {
 //                    Text("First Name: " + firstName)
                     Image(systemName: "person")
@@ -222,7 +239,7 @@ struct ComClubProfileView: View {
                             "id": userID,
                             "poc": PointOfContact,
                             "location": Location,
-                            "picture": base64ImageString
+                            "picture": base64ImageString ?? ""
                         ] as [String : Any]
                         let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
                         let jsonString = String(data: jsonData, encoding: .utf8)!
@@ -275,7 +292,9 @@ struct ComClubProfileView: View {
                 }
                 Spacer()
             }
-        }.alert(isPresented: $showAlert) {
+        }
+        .preferredColorScheme(.dark)
+        .alert(isPresented: $showAlert) {
             Alert(title: Text("Response"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
     }
