@@ -171,20 +171,6 @@ struct ProfileView: View {
                     }
                 }
                 
-                if let image = selectedImage {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 80, height: 80)
-                        .clipShape(Circle())
-                } else {
-                    Image(systemName: "person.circle")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 80, height: 80)
-                        .foregroundColor(.gray)
-                        .clipShape(Circle())
-                }
                 
                 VStack{
                     //  Fetched Comedian View from the database
