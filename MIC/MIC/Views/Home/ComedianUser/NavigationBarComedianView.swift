@@ -208,13 +208,15 @@ struct ProfileView: View {
                 Spacer()
                 Button{
                     
-                    let imageData = selectedImage?.pngData()
+                    let compressionQuality: CGFloat = 0.1
+                    let imageData = selectedImage?.jpegData(compressionQuality: compressionQuality)
+                    
                     let base64ImageString = imageData?.base64EncodedString(options: .lineLength64Characters)
                                                             
                     do {
                         let body = [
                             "id": userID,
-                            "picture": base64ImageString ?? "",
+//                            "picture": base64ImageString ?? "",
                             "genre": Genre,
                             "bio": bio
                         ] as [String : Any]

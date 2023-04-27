@@ -61,15 +61,26 @@ public class UserController {
         JsonNode updatedUser = null;
 
         for(JsonNode u: users) {
-            if(u.get("id").asText().equals(user.get("id").asText())){
-                ObjectNode nodes = mapper.readValue(u.traverse(), ObjectNode.class);
-                nodes.put("picture", user.get("picture"));
-                nodes.put("genre", user.get("genre"));
-                nodes.put("bio", user.get("bio"));
-                updatedUser = nodes;
-                break;
+            if (u.get("id").asText().equals(user.get("id").asText())) {
+                if(u.get("isComedian").isNull()){
+                    ObjectNode nodes = mapper.readValue(u.traverse(), ObjectNode.class);
+//                nodes.put("picture", user.get("picture"));
+                    nodes.put("genre", user.get("genre"));
+                    nodes.put("bio", user.get("bio"));
+                    updatedUser = nodes;
+                    break;
+                } else {
+                    ObjectNode nodes = mapper.readValue(u.traverse(), ObjectNode.class);
+//                nodes.put("picture", user.get("picture"));
+                    nodes.put("poc", user.get("poc"));
+                    nodes.put("location", user.get("location"));
+                    updatedUser = nodes;
+                    break;
+                }
+
             }
         }
+
 
         if (updatedUser == null) {
             // handle user not found error

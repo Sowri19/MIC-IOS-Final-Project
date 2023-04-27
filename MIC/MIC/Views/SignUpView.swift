@@ -210,7 +210,7 @@ struct SignUpView: View {
                                 print(authResult.user.displayName ?? "")
                                 userID = authResult.user.uid
                                 
-                                let user = User(email: email, password: password, firstName: firstName, lastName: lastName, id: Int(userID) ?? 0, picture: "profile.jpg", bookings: [])
+//                                let user = User(email: email, password: password, firstName: firstName, lastName: lastName, id: Int(userID) ?? 0, picture: "profile.jpg", bookings: [])
                                 do {
                                     let body = [
                                         "id": userID,
@@ -218,7 +218,8 @@ struct SignUpView: View {
                                         "password": password,
                                         "firstName": firstName,
                                         "lastName": lastName,
-                                        "picture": user.picture
+                                        "isComedian": Comedian,
+                                        "isComedyClub": ComedyClub
                                     ]
                                     let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
                                     let jsonString = String(data: jsonData, encoding: .utf8)!
