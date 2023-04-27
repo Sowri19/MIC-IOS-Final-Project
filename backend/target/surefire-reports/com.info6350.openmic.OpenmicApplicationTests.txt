@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.info6350.openmic.OpenmicApplicationTests
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.353 s - in com.info6350.openmic.OpenmicApplicationTests
