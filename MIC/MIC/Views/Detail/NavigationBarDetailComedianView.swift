@@ -9,6 +9,7 @@ import SwiftUI
 
 struct NavigationBarComedianDetailView: View {
     // MARK: - PROPERTY
+    @EnvironmentObject var Bookings: Bookings
     
     // MARK: - BODY
     
@@ -16,7 +17,10 @@ struct NavigationBarComedianDetailView: View {
 
     var body: some View {
         HStack{
-            Button(action: {}, label: {
+            Button(action: {
+                Bookings.selectedBooking = nil
+                Bookings.showingBooking = false
+            }, label: {
                 Image(systemName: "chevron.left")
                     .font(.title)
                     .foregroundColor(.white)
@@ -34,6 +38,7 @@ struct NavigationBarComedianDetailView: View {
 struct NavigationBarComedianDetailView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationBarComedianDetailView()
+            .environmentObject(Bookings())
             .previewLayout(.sizeThatFits)
             .padding()
             .background(Color.gray)
