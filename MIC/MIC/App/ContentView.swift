@@ -278,7 +278,6 @@ struct ComClubCreateEventView: View {
                         .frame(height: 20)
                         .colorScheme(.dark)
                     }.padding()
-                
                     HStack{
                         Button(action: {
                             self.showImagePicker = true

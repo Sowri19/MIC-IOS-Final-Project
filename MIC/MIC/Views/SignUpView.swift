@@ -220,7 +220,7 @@ struct SignUpView: View {
                                         "lastName": lastName,
                                         "isComedian": Comedian,
                                         "isComedyClub": ComedyClub
-                                    ]
+                                    ] as [String : Any]
                                     let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
                                     let jsonString = String(data: jsonData, encoding: .utf8)!
                                     print(jsonString)

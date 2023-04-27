@@ -146,7 +146,7 @@ struct ProfileView: View {
                 
                 Spacer()
                 HStack{
-                    Text("Your Profile")
+                    Text("Welcome \(firstName)!!\nYour Profile")
                         .foregroundColor(.white)
                         .font(.largeTitle)
                         .bold()
@@ -154,6 +154,7 @@ struct ProfileView: View {
                 }
                 .padding()
                 .padding(.top)
+<<<<<<< HEAD
                 .onAppear {
                     fetchUserData { (data, error) in
                         if let data = data?.data(using: .utf8) {
@@ -186,6 +187,44 @@ struct ProfileView: View {
                         .clipShape(Circle())
                 }
                 
+=======
+                VStack{
+                    //  Fetched Comedian View from the database
+                    ScrollView(.vertical, showsIndicators: true, content:{
+                        VStack{
+                            if let image = selectedImage {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 80, height: 80)
+                                    .clipShape(Circle())
+                            } else {
+                                Image(systemName: "person.circle")
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 80, height: 80)
+                                    .foregroundColor(.gray)
+                                    .clipShape(Circle())
+                            }
+                            LazyVGrid(columns: [GridItem(.flexible(), spacing: 20), GridItem(.flexible(), spacing: 20)]) {
+                                Text("First Name:")
+                                    .font(.headline)
+                                TextField("Enter First Name", text: $firstName)
+                                Text("Last Name:")
+                                    .font(.headline)
+                                TextField("Enter Last Name", text: $lastName)
+                                Text("Your Genre:")
+                                    .font(.headline)
+                                TextField("Your Genre", text: $Genre)
+                                Text("Your Bio:")
+                                    .font(.headline)
+                                TextField("Bio", text: $bio)
+                            }
+                        }
+                        .padding()
+                    })
+                }
+>>>>>>> origin/main
                 HStack {
                     //                    Text("First Name: " + firstName)
                     Image(systemName: "pencil.and.outline")
@@ -197,8 +236,13 @@ struct ProfileView: View {
                 .padding()
                 
                 HStack {
+<<<<<<< HEAD
                     //                    Text("First Name: " + firstName)
                     Image(systemName: "pencil.and.outline")
+=======
+
+                    Image(systemName: "list.bullet.clipboard")
+>>>>>>> origin/main
                     TextField("What is your Genre", text: $Genre)
                 }
                 .foregroundColor(.white)
@@ -217,8 +261,13 @@ struct ProfileView: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(RoundedRectangle(cornerRadius: 10)
+<<<<<<< HEAD
                                 .fill(Color.white))
                             .padding(.horizontal)
+=======
+                            .fill(Color.white))
+                        .padding(.horizontal)
+>>>>>>> origin/main
                         
                     }
                 }
@@ -285,12 +334,19 @@ struct ProfileView: View {
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10)
+<<<<<<< HEAD
                             .fill(Color.white))
                     //                        .padding(.horizontal)
+=======
+                        .fill(Color.white))
+                        .padding(.horizontal)
+>>>>>>> origin/main
                 }
                 Spacer()
             }
-        }.alert(isPresented: $showAlert) {
+        }
+        .preferredColorScheme(.dark)
+        .alert(isPresented: $showAlert) {
             Alert(title: Text("Response"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
     }
