@@ -62,7 +62,7 @@ public class UserController {
 
         for(JsonNode u: users) {
             if (u.get("id").asText().equals(user.get("id").asText())) {
-                if(u.get("isComedian").isNull()){
+                if(u.get("isComedian").asBoolean()){
                     ObjectNode nodes = mapper.readValue(u.traverse(), ObjectNode.class);
 //                nodes.put("picture", user.get("picture"));
                     nodes.put("genre", user.get("genre"));
