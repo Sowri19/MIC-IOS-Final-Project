@@ -2,6 +2,7 @@ package com.info6350.openmic.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.info6350.openmic.repository.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,7 +56,29 @@ public class UserController {
     @PostMapping ("/update")
     public ResponseEntity updateUser(@RequestHeader HttpHeaders headers, @RequestBody JsonNode user) throws IOException {
 
-        return ResponseEntity.ok(dao.save(user));
+        List<JsonNode> users = dao.findAll();
+
+        JsonNode updatedUser = null;
+
+        for(JsonNode u: users) {
+            if(u.get("id").asText().equals(user.get("id").asText())){
+                ObjectNode nodes = mapper.readValue(u.traverse(), ObjectNode.class);
+                nodes.put("picture", user.get("picture"));
+                nodes.put("genre", user.get("genre"));
+                nodes.put("bio", user.get("bio"));
+                updatedUser = nodes;
+                break;
+            }
+        }
+
+        if (updatedUser == null) {
+            // handle user not found error
+            return ResponseEntity.notFound().build();
+        }
+
+        dao.save(updatedUser);
+
+        return ResponseEntity.ok(updatedUser);
 
     }
 
