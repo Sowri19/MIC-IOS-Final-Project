@@ -168,6 +168,8 @@ struct ComClubCreateEventView: View {
     @State private var selectedImage: UIImage?
     @State private var showImagePicker = false
     
+    @State private var users: String?
+    
 
     let comedians = ["Dave Chappelle", "Trevor Noah", "Ellen DeGeneres", "Amy Schumer"]
     @State private var selectedComedian = "Dave Chappelle"
@@ -266,6 +268,27 @@ struct ComClubCreateEventView: View {
                             Spacer()
                         }
                         .padding(.leading)
+                        .onAppear() {
+                            fetchUserData { (data, error) in
+                                if let data = data?.data(using: .utf8) {
+                                    
+                                    
+                                    
+                                    
+                                    do {
+                                        for j in data {
+                                            users.append(try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any])
+                                        }
+                                    } catch {
+                                        print(error.localizedDescription)
+                                    }
+                                } else if let error = error {
+                                    // Handle the error
+                                }
+                            }
+                        }
+                        
+                        
 
                         Picker(selection: $selectedComedian, label: Text("")) {
                             ForEach(comedians, id: \.self) { color in
@@ -366,6 +389,45 @@ struct ComClubCreateEventView: View {
             Alert(title: Text("Response"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
         }
+                       
+                       func fetchUserData(completion: @escaping (String?, Error?) -> Void) {
+                           
+                           do {
+                               guard let url = URL(string: "http://localhost:8080/users/getAll") else {
+                                   return
+                               }
+                               
+                               var request = URLRequest(url: url)
+                               request.httpMethod = "GET"
+                               request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                   //            let jsonString = ""
+                   //            request.httpBody = jsonString.data(using: .utf8)
+                               
+                               let session = URLSession.shared
+                               
+                               let task = session.dataTask(with: request){ data, response, error in
+                                   guard let data = data, error == nil else {
+                                       print(error?.localizedDescription ?? "Unknown error")
+                                       return
+                                   }
+                                   if let httpResponse = response as? HTTPURLResponse {
+                                       if (200...299).contains(httpResponse.statusCode) {
+                                           let responseData = String(data: data, encoding: .utf8)!
+                                           DispatchQueue.main.async {
+                   //                            alertMessage = responseData
+                   //                            showAlert = true
+                                               completion(responseData, nil)
+                                           }
+                                       } else {
+                                           print("Server Error: \(httpResponse.statusCode)")
+                                       }
+                                   }
+                               }
+                               task.resume()
+                           } catch {
+                               print(error.localizedDescription)
+                           }
+                       }
 }
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
