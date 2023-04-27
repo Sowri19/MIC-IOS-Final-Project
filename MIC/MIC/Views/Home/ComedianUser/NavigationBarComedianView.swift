@@ -259,6 +259,7 @@ struct ProfileView: View {
                 .padding()
                 
                 HStack {
+
                     Image(systemName: "list.bullet.clipboard")
                     TextField("What is your Genre", text: $Genre)
                 }
@@ -280,6 +281,7 @@ struct ProfileView: View {
                             .background(RoundedRectangle(cornerRadius: 10)
                             .fill(Color.white))
                             .padding(.horizontal)
+
                     }
                 }
                 .sheet(isPresented: $showImagePicker) {
@@ -345,9 +347,6 @@ struct ProfileView: View {
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10)
-                        .fill(Color.white))
-                        .padding(.horizontal)
-                        
                 }
                 Spacer()
             }
