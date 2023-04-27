@@ -167,6 +167,7 @@ struct ComClubCreateEventView: View {
 
     @State private var selectedImage: UIImage?
     @State private var showImagePicker = false
+    
 
     let comedians = ["Dave Chappelle", "Trevor Noah", "Ellen DeGeneres", "Amy Schumer"]
     @State private var selectedComedian = "Dave Chappelle"

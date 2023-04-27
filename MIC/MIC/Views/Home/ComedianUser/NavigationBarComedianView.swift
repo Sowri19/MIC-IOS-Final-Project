@@ -125,21 +125,25 @@ struct ProfileView: View {
     @State var bio: String = ""
     @State private var showAlert = false
     @State private var alertMessage = ""
-
+    @State private var getResponse = [String: Any]()
+    
     @State private var selectedImage: UIImage?
     @State private var showImagePicker = false
-
-
+    @State var userData = [String: Any]()
+    
+    
     @AppStorage("uid") var userID: String = ""
     @AppStorage("isComedian") var isComedian: Bool = false
     @AppStorage("isComedyClub") var isComedyClub: Bool = false
     @AppStorage("isDocumentID") var isDocumentID: String = ""
     @AppStorage("profileImage") var profileImage: String = ""
-
+    
     var body: some View {
         ZStack{
             Color.black.edgesIgnoringSafeArea(.all)
             VStack{
+                
+                
                 Spacer()
                 HStack{
                     Text("Welcome \(firstName)!!\nYour Profile")
@@ -150,6 +154,40 @@ struct ProfileView: View {
                 }
                 .padding()
                 .padding(.top)
+<<<<<<< HEAD
+                .onAppear {
+                    fetchUserData { (data, error) in
+                        if let data = data?.data(using: .utf8) {
+                            do {
+                                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                                         print(json)
+                                    }
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                            
+                        } else if let error = error {
+                            // Handle the error
+                        }
+                    }
+                }
+                
+                if let image = selectedImage {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 80, height: 80)
+                        .clipShape(Circle())
+                } else {
+                    Image(systemName: "person.circle")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 80, height: 80)
+                        .foregroundColor(.gray)
+                        .clipShape(Circle())
+                }
+                
+=======
                 VStack{
                     //  Fetched Comedian View from the database
                     ScrollView(.vertical, showsIndicators: true, content:{
@@ -186,8 +224,9 @@ struct ProfileView: View {
                         .padding()
                     })
                 }
+>>>>>>> origin/main
                 HStack {
-//                    Text("First Name: " + firstName)
+                    //                    Text("First Name: " + firstName)
                     Image(systemName: "pencil.and.outline")
                     TextField("Write your Bio", text: $bio)
                 }
@@ -197,8 +236,13 @@ struct ProfileView: View {
                 .padding()
                 
                 HStack {
+<<<<<<< HEAD
+                    //                    Text("First Name: " + firstName)
+                    Image(systemName: "pencil.and.outline")
+=======
 
                     Image(systemName: "list.bullet.clipboard")
+>>>>>>> origin/main
                     TextField("What is your Genre", text: $Genre)
                 }
                 .foregroundColor(.white)
@@ -217,8 +261,13 @@ struct ProfileView: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(RoundedRectangle(cornerRadius: 10)
+<<<<<<< HEAD
+                                .fill(Color.white))
+                            .padding(.horizontal)
+=======
                             .fill(Color.white))
                         .padding(.horizontal)
+>>>>>>> origin/main
                         
                     }
                 }
@@ -232,11 +281,11 @@ struct ProfileView: View {
                     let imageData = selectedImage?.jpegData(compressionQuality: compressionQuality)
                     
                     let base64ImageString = imageData?.base64EncodedString(options: .lineLength64Characters)
-                                                            
+                    
                     do {
                         let body = [
                             "id": userID,
-//                            "picture": base64ImageString ?? "",
+                            //                            "picture": base64ImageString ?? "",
                             "genre": Genre,
                             "bio": bio
                         ] as [String : Any]
@@ -245,35 +294,35 @@ struct ProfileView: View {
                         guard let url = URL(string: "http://localhost:8080/users/update") else {
                             return
                         }
-                                                                                    
+                        
                         var request = URLRequest(url: url)
                         request.httpMethod = "POST"
                         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                                                                                    
+                        
                         request.httpBody = jsonString.data(using: .utf8)
-                                                                                    
+                        
                         let session = URLSession.shared
-                                                                                    
+                        
                         let task = session.dataTask(with: request){ data, response, error in
-                        guard let data = data, error == nil else {
-                            print(error?.localizedDescription ?? "Unknown error")
-                            return
-                        }
-                        if let httpResponse = response as? HTTPURLResponse {
-                            if (200...299).contains(httpResponse.statusCode) {
-                                let responseData = String(data: data, encoding: .utf8)!
-                                DispatchQueue.main.async {
-                                    alertMessage = responseData
-                                    showAlert = true
+                            guard let data = data, error == nil else {
+                                print(error?.localizedDescription ?? "Unknown error")
+                                return
+                            }
+                            if let httpResponse = response as? HTTPURLResponse {
+                                if (200...299).contains(httpResponse.statusCode) {
+                                    let responseData = String(data: data, encoding: .utf8)!
+                                    DispatchQueue.main.async {
+                                        alertMessage = responseData
+                                        showAlert = true
+                                    }
+                                } else {
+                                    print("Server Error: \(httpResponse.statusCode)")
                                 }
-                            } else {
-                            print("Server Error: \(httpResponse.statusCode)")
                             }
                         }
-                    }
-                    task.resume()
+                        task.resume()
                     } catch {
-                    print(error.localizedDescription)
+                        print(error.localizedDescription)
                     }
                     
                 }label: {
@@ -285,8 +334,13 @@ struct ProfileView: View {
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10)
+<<<<<<< HEAD
+                            .fill(Color.white))
+                    //                        .padding(.horizontal)
+=======
                         .fill(Color.white))
                         .padding(.horizontal)
+>>>>>>> origin/main
                 }
                 Spacer()
             }
@@ -294,6 +348,45 @@ struct ProfileView: View {
         .preferredColorScheme(.dark)
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Response"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+        }
+    }
+    
+    func fetchUserData(completion: @escaping (String?, Error?) -> Void) {
+        
+        do {
+            guard let url = URL(string: "http://localhost:8080/users/get/\(userID)") else {
+                return
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//            let jsonString = ""
+//            request.httpBody = jsonString.data(using: .utf8)
+            
+            let session = URLSession.shared
+            
+            let task = session.dataTask(with: request){ data, response, error in
+                guard let data = data, error == nil else {
+                    print(error?.localizedDescription ?? "Unknown error")
+                    return
+                }
+                if let httpResponse = response as? HTTPURLResponse {
+                    if (200...299).contains(httpResponse.statusCode) {
+                        let responseData = String(data: data, encoding: .utf8)!
+                        DispatchQueue.main.async {
+                            alertMessage = responseData
+                            showAlert = true
+                            completion(responseData, nil)
+                        }
+                    } else {
+                        print("Server Error: \(httpResponse.statusCode)")
+                    }
+                }
+            }
+            task.resume()
+        } catch {
+            print(error.localizedDescription)
         }
     }
 }

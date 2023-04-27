@@ -60,7 +60,7 @@ public class EventsController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity getEventById(@RequestHeader HttpHeaders headers, @PathVariable String id) {
+    public ResponseEntity getEventById(@PathVariable String id) {
 
         return ResponseEntity.ok(dao.findById(id));
 
