@@ -347,9 +347,9 @@ struct ProfileView: View {
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10)
-                }
+                )}
                 Spacer()
-            }
+                                    }
         }
         .preferredColorScheme(.dark)
         .alert(isPresented: $showAlert) {
