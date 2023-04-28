@@ -266,9 +266,6 @@ struct UserProfileView: View {
                   
                     db.collection("users").document(isDocumentID).getDocument { (document, error) in
                         if let document = document, document.exists {
-                            self.firstName = document.data()?["firstName"] as? String ?? ""
-                            self.lastName = document.data()?["lastName"] as? String ?? ""
-                            self.email = document.data()?["email"] as? String ?? ""
                             if let imageData = document.data()?["picture"] as? Data {
                                 self.selectedImage = UIImage(data: imageData)
                             }

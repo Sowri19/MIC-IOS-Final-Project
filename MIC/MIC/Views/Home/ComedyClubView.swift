@@ -12,6 +12,7 @@ import Firebase
 import UIKit
 
 struct ComedyClubView: View {
+    
     // MARK: - Property
     
     // MARK: - Body
@@ -24,11 +25,13 @@ struct ComedyClubView: View {
 //    @State private var isComedyClub = false
 //    @State private var picture: UIImage?
     // MARK: - Property
-//        let comedyClub: ComedyClub
-    var body: some View {
-        
+        let comedyClub: ComedyClub
+    
+        var body: some View {
+            
         
             
+
             // MARK: - Body
             
                 Button(action: {}, label: {
@@ -51,6 +54,7 @@ struct ComedyClubView: View {
                 }) //: Button
            
 //        Button(action: {}, label: {
+//
 //            HStack(alignment: .center, spacing: 6){
 //                // Build an array of Image views for each comedy club's picture
 //                let pictureViews = comedyClubs.map { comedyClub in
@@ -81,12 +85,12 @@ struct ComedyClubView: View {
     }
 }
 
-struct ComedyClubView_Previews: PreviewProvider {
-    static var previews: some View {
-      ComedyClubView()
-
+//struct ComedyClubView_Previews: PreviewProvider {
+//    static var previews: some View {
+//      ComedyClubView()
+//
 //        ComedyClubView(comedyClub: ComedyClub(firstName: firstName, lastName: lastName, location: location, pointOfContact: pointOfContact, bio: bio, genre: genre, isComedyClub: isComedyClub))
-            .padding()
-            .background(Color.gray)
-    }
-}
+//            .padding()
+//            .background(Color.gray)
+//    }
+//}

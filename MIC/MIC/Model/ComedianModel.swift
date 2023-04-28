@@ -20,3 +20,4 @@ struct ComedianModel: Codable, Identifiable {
     
     var formattedPrice: String {return "$\(price)"}
 }
+

@@ -249,7 +249,7 @@ struct CoemdProfileView: View {
                                
                 HStack {
 //                    Text("First Name: " + firstName)
-                    Image(systemName: "person")
+                    Image(systemName: "music.note.list")
                     TextField("Genre", text: $Genre)
                         
                 }
@@ -260,7 +260,7 @@ struct CoemdProfileView: View {
                 
                 HStack {
 //                    Text("First Name: " + firstName)
-                    Image(systemName: "mappin.and.ellipse")
+                    Image(systemName: "list.clipboard")
                     TextField("Bio", text: $Bio)
                 }
                 .foregroundColor(.white)
@@ -341,7 +341,6 @@ struct CoemdProfileView: View {
             Alert(title: Text("Response"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
     }
-    
 }
 
 struct NavigationBarComedianView_Previews: PreviewProvider {
