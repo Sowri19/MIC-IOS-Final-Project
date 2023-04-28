@@ -102,6 +102,7 @@ struct NavigationBarComedyClubView: View {
                   .cornerRadius(10)
                   .frame(width: 90, height: 30)
               }
+            
             Button(action: {
                             ClubProfileView = true // Set the state variable to true to show the view
                         }, label:{
@@ -125,7 +126,10 @@ struct ComClubProfileView: View {
     @State private var lastName: String = ""
     @State private var Location: String = ""
     @State var PointOfContact: String = ""
-
+    
+    @State private var location: String = ""
+    @State var pointOfContact: String = ""
+    
     @State private var showAlert = false
     @State private var alertMessage = ""
 
@@ -134,9 +138,46 @@ struct ComClubProfileView: View {
 
 
     @AppStorage("uid") var userID: String = ""
-    @AppStorage("isComedian") var isComedian: Bool = false
-    @AppStorage("isComedyClub") var isComedyClub: Bool = false
 
+    func fetchUserData(completion: @escaping (String?, Error?) -> Void) {
+        
+        do {
+            guard let url = URL(string: "http://localhost:8080/users/get/\(userID)") else {
+                return
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//            let jsonString = ""
+//            request.httpBody = jsonString.data(using: .utf8)
+            
+            let session = URLSession.shared
+            
+            let task = session.dataTask(with: request){ data, response, error in
+                guard let data = data, error == nil else {
+                    print(error?.localizedDescription ?? "Unknown error")
+                    return
+                }
+                if let httpResponse = response as? HTTPURLResponse {
+                    if (200...299).contains(httpResponse.statusCode) {
+                        let responseData = String(data: data, encoding: .utf8)!
+                        DispatchQueue.main.async {
+//                            alertMessage = responseData
+//                            showAlert = true
+                            completion(responseData, nil)
+                        }
+                    } else {
+                        print("Server Error: \(httpResponse.statusCode)")
+                    }
+                }
+            }
+            task.resume()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
     var body: some View {
         ZStack{
             Color.black.edgesIgnoringSafeArea(.all)
@@ -155,16 +196,15 @@ struct ComClubProfileView: View {
                     fetchUserData { (data, error) in
                         if let data = data?.data(using: .utf8) {
                             do {
-                                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                                         print(json)
-                                        
-                                        
-                                    
-                                    }
-                                } catch {
-                                    print(error.localizedDescription)
+                                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                                    firstName = json["firstName"] as? String ?? ""
+                                    lastName = json["lastName"] as? String ?? ""
+                                    Location = json["location"] as? String ?? ""
+                                    PointOfContact = json["poc"] as? String ?? ""
                                 }
-                            
+                            } catch {
+                                print(error.localizedDescription)
+                            }
                         } else if let error = error {
                             // Handle the error
                         }
@@ -188,19 +228,52 @@ struct ComClubProfileView: View {
                                 .clipShape(Circle())
                         }
                         LazyVGrid(columns: [GridItem(.flexible(), spacing: 20), GridItem(.flexible(), spacing: 20)]) {
-                                   Text("First Name:")
+                            Text("First Name:")
                                 .font(.headline)
-                                   TextField("Enter First Name", text: $firstName)
-                                   Text("Last Name:")
+                                .foregroundColor(.gray)
+                                .padding(.bottom, 5)
+                                .disabled(true)
+                            TextField("Enter First Name", text: $firstName)
+                                .padding(.vertical, 10)
+                                .padding(.horizontal, 20)
+                                .background(Color.gray.opacity(0.2))
+                                .cornerRadius(10)
+                                .disabled(true)
+                            Text("Last Name:")
                                 .font(.headline)
-                                   TextField("Enter Last Name", text: $lastName)
-                                   Text("Point of Contact:")
+                                .foregroundColor(.gray)
+                                .padding(.bottom, 5)
+                                .disabled(true)
+                            TextField("Enter Last Name", text: $lastName)
+                                .padding(.vertical, 10)
+                                .padding(.horizontal, 20)
+                                .background(Color.gray.opacity(0.2))
+                                .cornerRadius(10)
+                                .disabled(true)
+                            Text("Point of Contact:")
                                 .font(.headline)
-                                   TextField("Enter Point of Contact", text: $PointOfContact)
-                                   Text("Location:")
+                                .foregroundColor(.gray)
+                                .padding(.bottom, 5)
+                                .disabled(true)
+                            TextField("Enter Point of Contact", text: $PointOfContact)
+                                .padding(.vertical, 10)
+                                .padding(.horizontal, 20)
+                                .background(Color.gray.opacity(0.2))
+                                .cornerRadius(10)
+                                .disabled(true)
+                            Text("Location:")
                                 .font(.headline)
+                                .foregroundColor(.gray)
+                                .padding(.bottom, 5)
+                                .disabled(true)
                             TextField("Enter Location", text: $Location)
-                               }
+                                .padding(.vertical, 10)
+                                .padding(.horizontal, 20)
+                                .background(Color.gray.opacity(0.2))
+                                .cornerRadius(10)
+                                .disabled(true)
+                        }
+                        .padding(.horizontal, 20)
                     }
                     .padding()
                 })
@@ -208,8 +281,7 @@ struct ComClubProfileView: View {
                 HStack {
 //                    Text("First Name: " + firstName)
                     Image(systemName: "person")
-                    TextField("Write your Point of Contact", text: $PointOfContact)
-                        
+                    TextField("Write your Point of Contact", text: $pointOfContact)
                         
                 }
                 .foregroundColor(.white)
@@ -219,9 +291,8 @@ struct ComClubProfileView: View {
                 
                 HStack {
 //                    Text("First Name: " + firstName)
-                    Image(systemName: "location")
-                    TextField("Location", text: $Location)
-      
+                    Image(systemName: "mappin.and.ellipse")
+                    TextField("Location", text: $location)
                 }
                 .foregroundColor(.white)
                 .padding()
@@ -256,8 +327,8 @@ struct ComClubProfileView: View {
                     do {
                         let body = [
                             "id": userID,
-                            "poc": PointOfContact,
-                            "location": Location,
+                            "poc": pointOfContact,
+                            "location": location,
                             "picture": base64ImageString ?? ""
                         ] as [String : Any]
                         let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
@@ -293,6 +364,25 @@ struct ComClubProfileView: View {
                         }
                     }
                     task.resume()
+                    
+                    fetchUserData { (data, error) in
+                        if let data = data?.data(using: .utf8) {
+                            do {
+                                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                                    firstName = json["firstName"] as? String ?? ""
+                                    lastName = json["lastName"] as? String ?? ""
+                                    Location = json["location"] as? String ?? ""
+                                    PointOfContact = json["poc"] as? String ?? ""
+                                }
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                        } else if let error = error {
+                            // Handle the error
+                        }
+                    }
+                       pointOfContact = ""
+                        location = ""
                     } catch {
                     print(error.localizedDescription)
                     }
@@ -306,7 +396,7 @@ struct ComClubProfileView: View {
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10)
-                            .fill(Color.white))
+                        .fill(Color.green))
                         .padding(.horizontal)
                 }
                 Spacer()
@@ -318,44 +408,6 @@ struct ComClubProfileView: View {
         }
     }
     
-    func fetchUserData(completion: @escaping (String?, Error?) -> Void) {
-        
-        do {
-            guard let url = URL(string: "http://localhost:8080/users/get/\(userID)") else {
-                return
-            }
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-//            let jsonString = ""
-//            request.httpBody = jsonString.data(using: .utf8)
-            
-            let session = URLSession.shared
-            
-            let task = session.dataTask(with: request){ data, response, error in
-                guard let data = data, error == nil else {
-                    print(error?.localizedDescription ?? "Unknown error")
-                    return
-                }
-                if let httpResponse = response as? HTTPURLResponse {
-                    if (200...299).contains(httpResponse.statusCode) {
-                        let responseData = String(data: data, encoding: .utf8)!
-                        DispatchQueue.main.async {
-                            alertMessage = responseData
-                            showAlert = true
-                            completion(responseData, nil)
-                        }
-                    } else {
-                        print("Server Error: \(httpResponse.statusCode)")
-                    }
-                }
-            }
-            task.resume()
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
 }
 
 struct NavigationBarComedyClubView_Previews: PreviewProvider {
