@@ -7,11 +7,11 @@
 
 import SwiftUI
 import FirebaseAuth
-
 import Firebase
 
 struct ContentView: View {
     // MARK: - PROPERTIES
+    
     @EnvironmentObject var Bookings: Bookings
     
     // MARK: - BODY
@@ -253,42 +253,12 @@ struct ComClubCreateEventView: View {
                     .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
                     .padding()
                     
-                    //                    HStack {
-                    //                        Image(systemName: "person.crop.circle.dashed")
-                    //                            .foregroundColor(.black)
-                    //                        TextField("Comedian Name", text: $ComedianName)
-                    //                    }
-                    //                    .foregroundColor(.white)
-                    //                    .padding()
-                    //                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
-                    //                    .padding()
                     HStack {
                         HStack {
                             Text("Comedians")
                             Spacer()
                         }
                         .padding(.leading)
-                        .onAppear() {
-                            fetchUserData { (data, error) in
-                                if let data = data?.data(using: .utf8) {
-                                    
-                                    
-                                    
-                                    
-                                    do {
-                                        for j in data {
-                                            users.append(try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any])
-                                        }
-                                    } catch {
-                                        print(error.localizedDescription)
-                                    }
-                                } else if let error = error {
-                                    // Handle the error
-                                }
-                            }
-                        }
-                        
-                        
 
                         Picker(selection: $selectedComedian, label: Text("")) {
                             ForEach(comedians, id: \.self) { color in
