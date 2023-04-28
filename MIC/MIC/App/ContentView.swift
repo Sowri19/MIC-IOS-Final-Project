@@ -128,6 +128,7 @@ struct ContentView: View {
                         }) //: SCROLL
                         Button(action: {
                             CreateEvent = true // Set the state variable to true to show the view
+
                             fetchEvents { (data, error) in
                                 if let data = data {
                                     for event in data {
@@ -142,6 +143,7 @@ struct ContentView: View {
                                     // Handle the error
                                 }
                             }
+
                         }, label: {
                             // Button label
                             Text("Create Event")
@@ -153,6 +155,8 @@ struct ContentView: View {
                                 .background(RoundedRectangle(cornerRadius: 10)
                                     .fill(Color.yellow))
                                 .padding(.horizontal)
+
+
                         })
                         Spacer()
                     } //: VSTACK
