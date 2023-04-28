@@ -215,7 +215,7 @@ struct ContentView: View {
                                         }
                                 }) //:Grid
                                 .padding(15)
-                                TitleView(title: "Comedy Categories")
+                                TitleView(title: "Comedy Genres")
                                 ComedyCategoryGridView()
                                 
                                 FooterView()

@@ -30,3 +30,4 @@ struct ComedyCategoryView_Previews: PreviewProvider {
             .background(colorBackground)
     }
 }
+ 
