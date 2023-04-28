@@ -13,7 +13,7 @@ struct ComedyClubDetailView: View {
     @AppStorage("uid") var userID: String = ""
     @State var title: String
     @State var events: [[String: Any]] = []
-    @State var filteredEvents: [[String: Any]] = []
+//    @State var filteredEvents: [[String: Any]] = []
     
        public func fetchFilteredEvents() {
            func fetchEventsData(completion: @escaping ([[String : Any]]?, Error?) -> Void) {
@@ -76,7 +76,6 @@ struct ComedyClubDetailView: View {
         self._title = State(initialValue: title)
         self._events = State(initialValue: events)
     }
-    
 
     
     // MARK: - BODY
@@ -86,7 +85,23 @@ struct ComedyClubDetailView: View {
             Text(title)
                 .font(.largeTitle)
                 .fontWeight(.heavy)
-                
+                .onAppear() {
+                    fetchEvents { (data, error) in
+                        if let data = data {
+                            for event in data {
+                                events.append(event)
+                            }
+                            for event in events {
+                                if(event["comedy_club_id"] as! String == userID){
+                                    filteredEvents.append(event)
+                                }
+                            }
+                        } else if let error = error {
+                            // Handle the error
+                        }
+                    }
+                }
+
             if let filteredEvents = filteredEvents.first?["event_name"] as? String {
                 Text(filteredEvents)
             } else {
