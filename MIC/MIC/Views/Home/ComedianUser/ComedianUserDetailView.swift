@@ -11,6 +11,7 @@ struct ComedianUserDetailView: View {
     // MARK: - PREVIEW
     
     var title: String
+    var events: [[String: Any]] = []
     
     
     // MARK: - BODY
@@ -20,6 +21,9 @@ struct ComedianUserDetailView: View {
             Text(title)
                 .font(.largeTitle)
                 .fontWeight(.heavy)
+            
+           
+            
             
             Spacer()
         }
