@@ -22,8 +22,48 @@ struct ContentView: View {
     @AppStorage("isComedyClub") var isComedyClub: Bool = false
     @State private var CreateEvent: Bool = false // New state variable
     @State var events: [[String: Any]] = []
+    @State var filteredEvents: [[String: Any]] = []
     
-    
+    func fetchEventsData(completion: @escaping ([[String : Any]]?, Error?) -> Void) {
+        do {
+            guard let url = URL(string: "http://localhost:8080/events/getAll") else {
+                return
+            }
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            let session = URLSession.shared
+            let task = session.dataTask(with: request){ data, response, error in
+                guard let data = data, error == nil else {
+                    print(error?.localizedDescription ?? "Unknown error")
+                    return
+                }
+                if let httpResponse = response as? HTTPURLResponse {
+                    if (200...299).contains(httpResponse.statusCode) {
+                        do {
+                            // make sure this JSON is in the format we expect
+                            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] {
+                                // try to read out a string array
+                                DispatchQueue.main.async {
+                                    completion(json, nil)
+                                }
+                            }
+                        } catch let error as NSError {
+                            print("Failed to load: \(error.localizedDescription)")
+                        }
+                    } else {
+                        print("Server Error: \(httpResponse.statusCode)")
+                        DispatchQueue.main.async {
+                            completion(nil, NSError(domain: "HTTPError", code: httpResponse.statusCode, userInfo: nil))
+                        }
+                    }
+                }
+            }
+            task.resume()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
     
     var body: some View {
         ZStack {
@@ -100,7 +140,7 @@ struct ContentView: View {
                         
                         ScrollView(.vertical, showsIndicators: false, content:{
                             VStack(spacing: 0){
-                                ComedianUserDetailView(title: "Your Events")
+                                ComedianUserDetailView(title: "Your Events", events: events)
                                 FooterView()
                                     .padding(.horizontal)
                             } //:VStack
@@ -141,6 +181,22 @@ struct ContentView: View {
                                 .background(RoundedRectangle(cornerRadius: 10)
                                     .fill(Color.yellow))
                                 .padding(.horizontal)
+                                .onAppear() {
+                                    fetchEventsData { (data, error) in
+                                        if let data = data {
+                                            for event in data {
+                                                events.append(event)
+                                            }
+                                            for event in events {
+                                                if(event["comedy_club_id"] as! String == userID){
+                                                    filteredEvents.append(event)
+                                                }
+                                            }
+                                        } else if let error = error {
+                                            // Handle the error
+                                        }
+                                    }
+                                }
                         })
                         Spacer()
                     } //: VSTACK
