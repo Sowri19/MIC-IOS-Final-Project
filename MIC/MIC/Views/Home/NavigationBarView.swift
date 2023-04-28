@@ -62,6 +62,7 @@ struct NavigationBarView: View {
     @AppStorage("uid") var userID: String = ""
     @State private var isAnimated: Bool = false
     @State private var showProfileView: Bool = false // New state variable
+    @AppStorage("isDocumentID") var isDocumentID: String = ""
     
     // MARK: - BODY
   
@@ -118,56 +119,18 @@ struct UserProfileView: View {
     
     @State private var firstName: String = ""
     @State private var lastName: String = ""
-    
-    @State private var genre: String = ""
-    @State private var bio: String = ""
+    @State private var picture: UIImage?
+    @State private var email: String = ""
     
     @State private var showAlert = false
     @State private var alertMessage = ""
-    @State private var getResponse = [String: Any]()
     
     @State private var selectedImage: UIImage?
     @State private var showImagePicker = false
-    @State var userData = [String: Any]()
     
     @AppStorage("uid") var userID: String = ""
+    @AppStorage("isDocumentID") var isDocumentID: String = ""
     
-    func fetchUserData(completion: @escaping (String?, Error?) -> Void) {
-        do {
-            guard let url = URL(string: "http://localhost:8080/users/get/\(userID)") else {
-                return
-            }
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    //            let jsonString = ""
-    //            request.httpBody = jsonString.data(using: .utf8)
-            
-            let session = URLSession.shared
-            
-            let task = session.dataTask(with: request){ data, response, error in
-                guard let data = data, error == nil else {
-                    print(error?.localizedDescription ?? "Unknown error")
-                    return
-                }
-                if let httpResponse = response as? HTTPURLResponse {
-                    if (200...299).contains(httpResponse.statusCode) {
-                        let responseData = String(data: data, encoding: .utf8)!
-                        DispatchQueue.main.async {
-    //                            alertMessage = responseData
-    //                            showAlert = true
-                            completion(responseData, nil)
-                        }
-                    } else {
-                        print("Server Error: \(httpResponse.statusCode)")
-                    }
-                }
-            }
-            task.resume()
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
 
     var body: some View {
         ZStack{
@@ -206,56 +169,64 @@ struct UserProfileView: View {
                 .padding()
                 .padding(.top)
                 .onAppear(){
-                    fetchUserData { (data, error) in
-                        if let data = data?.data(using: .utf8) {
-                            do {
-                                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                                    firstName = json["firstName"] as? String ?? ""
-                                    lastName = json["lastName"] as? String ?? ""
-                                   
-                                }
-                            } catch {
-                                print(error.localizedDescription)
+                    let db = Firestore.firestore()
+                    db.collection("users").document(isDocumentID).getDocument { (document, error) in
+                        if let document = document, document.exists {
+                            self.firstName = document.data()?["firstName"] as? String ?? ""
+                            self.lastName = document.data()?["lastName"] as? String ?? ""
+                            self.email = document.data()?["email"] as? String ?? ""
+                            if let imageData = document.data()?["picture"] as? Data {
+                                self.selectedImage = UIImage(data: imageData)
                             }
-                        } else if let error = error {
-                            // Handle the error
+                            print("Document ID: \(document.documentID)")
+                        } else {
+                            print("Error retrieving document ID: \(error?.localizedDescription ?? "unknown error")")
                         }
                     }
                 }
+                //  Fetched Comedy Club View from the database
+            ScrollView(.vertical, showsIndicators: false, content:{
                 VStack{
-                    //  Fetched Comedian View from the database
-                    ScrollView(.vertical, showsIndicators: false, content:{
-                        VStack{
-                            
-                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 120), spacing: 20)], spacing: 20) {
-                                Text("First Name:")
-                                    .font(.headline)
-                                    .foregroundColor(.gray)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                TextEditor(text: $firstName)
-                                    .padding(.horizontal, 10)
-                                    .background(Color.gray.opacity(0.2))
-                                    .cornerRadius(10)
-                                    .disabled(true)
-                                    .frame(minHeight: 35)
-                                
-                                Text("Last Name:")
-                                    .font(.headline)
-                                    .foregroundColor(.gray)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                TextEditor(text: $lastName)
-                                    .padding(.horizontal, 10)
-                                    .background(Color.gray.opacity(0.2))
-                                    .cornerRadius(10)
-                                    .disabled(true)
-                                    .frame(minHeight: 35)
-                                    
-                            }
-                            .padding(.horizontal, 20)
-                        }
-                        .padding()
-                    })
+                    
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 120), spacing: 20)], spacing: 20) {
+                        Text("First Name:")
+                            .font(.headline)
+                            .foregroundColor(.gray)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        TextEditor(text: $firstName)
+                            .padding(.horizontal, 10)
+                            .background(Color.gray.opacity(0.2))
+                            .cornerRadius(10)
+                            .disabled(true)
+                            .frame(minHeight: 35)
+                        
+                        Text("Last Name:")
+                            .font(.headline)
+                            .foregroundColor(.gray)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        TextEditor(text: $lastName)
+                            .padding(.horizontal, 10)
+                            .background(Color.gray.opacity(0.2))
+                            .cornerRadius(10)
+                            .disabled(true)
+                            .frame(minHeight: 35)
+                        
+                        Text("Your Email:")
+                            .font(.headline)
+                            .foregroundColor(.gray)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        TextEditor(text: $email)
+                            .padding(.horizontal, 10)
+                            .background(Color.gray.opacity(0.2))
+                            .cornerRadius(10)
+                            .disabled(true)
+                            .frame(minHeight: 35)
+                        
+                    }
+                    .padding(.horizontal, 20)
                 }
+                .padding()
+            })
                 
                
                 HStack{
@@ -279,74 +250,34 @@ struct UserProfileView: View {
                 }
                 Spacer()
                 Button{
-                    
-                    let compressionQuality: CGFloat = 0.1
-                    let imageData = selectedImage?.jpegData(compressionQuality: compressionQuality)
-                    
-                    let base64ImageString = imageData?.base64EncodedString(options: .lineLength64Characters)
-                    
-                    do {
-                        let body = [
-                            "id": userID,
-                            //                            "picture": base64ImageString ?? "",
-                            "genre": genre,
-                            "bio": bio
-                        ] as [String : Any]
-                        let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
-                        let jsonString = String(data: jsonData, encoding: .utf8)!
-                        guard let url = URL(string: "http://localhost:8080/users/update") else {
-                            return
+                    let db = Firestore.firestore()
+                    let documentRef = db.collection("users").document(isDocumentID)
+                    let imageData = selectedImage?.jpegData(compressionQuality: 0.5)
+                    documentRef.setData([
+                        "picture": imageData ?? Data()
+                    ], merge: true) { err in
+                        if let err = err {
+                            print("Error appending data: \(err)")
+                        } else {
+                            print("Data appended successfully!")
                         }
-                        
-                        var request = URLRequest(url: url)
-                        request.httpMethod = "POST"
-                        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                        
-                        request.httpBody = jsonString.data(using: .utf8)
-                        
-                        let session = URLSession.shared
-                        
-                        let task = session.dataTask(with: request){ data, response, error in
-                            guard let data = data, error == nil else {
-                                print(error?.localizedDescription ?? "Unknown error")
-                                return
-                            }
-                            if let httpResponse = response as? HTTPURLResponse {
-                                if (200...299).contains(httpResponse.statusCode) {
-                                    let responseData = String(data: data, encoding: .utf8)!
-                                    DispatchQueue.main.async {
-                                        alertMessage = responseData
-                                        showAlert = true
-                                    }
-                                } else {
-                                    print("Server Error: \(httpResponse.statusCode)")
-                                }
-                            }
-                        }
-                        task.resume()
-                        
-                        fetchUserData { (data, error) in
-                            if let data = data?.data(using: .utf8) {
-                                do {
-                                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                                        firstName = json["firstName"] as? String ?? ""
-                                        lastName = json["lastName"] as? String ?? ""
-                                       
-                                    }
-                                } catch {
-                                    print(error.localizedDescription)
-                                }
-                            } else if let error = error {
-                                // Handle the error
-                            }
-                        }
-                        
-                    genre = ""
-                    bio = ""
-                    } catch {
-                        print(error.localizedDescription)
                     }
-                    
+                    selectedImage = nil
+                  
+                    db.collection("users").document(isDocumentID).getDocument { (document, error) in
+                        if let document = document, document.exists {
+                            self.firstName = document.data()?["firstName"] as? String ?? ""
+                            self.lastName = document.data()?["lastName"] as? String ?? ""
+                            self.email = document.data()?["email"] as? String ?? ""
+                            if let imageData = document.data()?["picture"] as? Data {
+                                self.selectedImage = UIImage(data: imageData)
+                            }
+                            print("Document ID: \(document.documentID)")
+                        } else {
+                            print("Error retrieving document ID: \(error?.localizedDescription ?? "unknown error")")
+                        }
+                    }
+
                 }label: {
                     // Button label
                     Text("Update your Profile")

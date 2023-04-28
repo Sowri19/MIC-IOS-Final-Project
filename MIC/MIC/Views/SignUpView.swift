@@ -179,7 +179,7 @@ struct SignUpView: View {
                             }
                             if let authResult = authResult {
                                 let db = Firestore.firestore()
-                                let docData: [String: Any] = ["isComedian": Comedian, "isComedyClub": ComedyClub, "uid": authResult.user.uid]
+                                let docData: [String: Any] = ["isComedian": Comedian, "isComedyClub": ComedyClub, "firstName": firstName, "lastName": lastName, "picture": picture, "email": email, "uid": authResult.user.uid]
 
                                 let docRef = db.collection("users").addDocument(data: docData) { error in
                                     if let error = error {
@@ -196,10 +196,13 @@ struct SignUpView: View {
                                         self.isDocumentID = document.documentID
                                         self.isComedian = document.data()?["isComedian"] as? Bool ?? false
                                         self.isComedyClub = document.data()?["isComedyClub"] as? Bool ?? false
-
+                                        self.isDocumentID = document.data()?["isDocumentID"] as? String ?? isDocumentID
+                                        
                                            print("Document ID: \(document.documentID)")
                                            print("isComedian: \(isComedian)")
                                            print("isComedyClub: \(isComedyClub)")
+                                           print("isDocumentID: \(isDocumentID)")
+                                        
                                         print("Document ID: \(document.documentID)")
                                     } else {
                                         print("Error retrieving document ID: \(error?.localizedDescription ?? "unknown error")")
@@ -210,68 +213,8 @@ struct SignUpView: View {
                                 print(authResult.user.displayName ?? "")
                                 userID = authResult.user.uid
                                 
-//                                let user = User(email: email, password: password, firstName: firstName, lastName: lastName, id: Int(userID) ?? 0, picture: "profile.jpg", bookings: [])
-                                do {
-                                    let body = [
-                                        "id": userID,
-                                        "email": email,
-                                        "password": password,
-                                        "firstName": firstName,
-                                        "lastName": lastName,
-                                        "isComedian": Comedian,
-                                        "isComedyClub": ComedyClub
-                                    ] as [String : Any]
-                                    let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
-                                    let jsonString = String(data: jsonData, encoding: .utf8)!
-                                    print(jsonString)
-//                                    var jsonData = try JSONEncoder().encode(user)
-//                                    var jsonString = String(data: jsonData, encoding: .utf8)
-//                                    var jsonString = "userId=300&title=My urgent task&completed=false"
-//                                    let jsonNode = try objectMapper.readTree(data: data)
-                                    sendRequest(jsonString)
-                                } catch {
-                                    print(error.localizedDescription)
-                                }
-                                
                             }
-                            
-                            func sendRequest(_ payload: String?) {
-                                guard let url = URL(string: "http://localhost:8080/users/create") else {
-                                    return
-                                }
-                                
-                                var request = URLRequest(url: url)
-                                request.httpMethod = "POST"
-                                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                                
-                                request.httpBody = payload?.data(using: .utf8)
-//                                request.httpBody = components.query?.data(using: .utf8)
-//                                request.httpBody = payload
-                                
-//                                request.httpBody = try? JSONSerialization.data(withJSONObject: jsonString)
-                                
-                                let session = URLSession.shared
-                                
-                                let task = session.dataTask(with: request){ data, response, error in
-                                    guard let data = data, error == nil else {
-                                        print(error?.localizedDescription ?? "Unknown error")
-                                        return
-                                    }
-                                    if let httpResponse = response as? HTTPURLResponse {
-                                        if (200...299).contains(httpResponse.statusCode) {
-                                            let responseData = String(data: data, encoding: .utf8)!
-                                            DispatchQueue.main.async {
-                                                alertMessage = responseData
-                                                showAlert = true
-                                            }
-                                        } else {
-                                            print("Server Error: \(httpResponse.statusCode)")
-                                        }
-                                    }
-                                }
-                                task.resume()
-                            }
-  
+
                         }
                     }label: {
                         // Button label
