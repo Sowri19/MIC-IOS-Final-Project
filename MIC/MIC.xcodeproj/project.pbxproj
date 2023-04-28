@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		23B574FC29FBC00100C3F048 /* GlobalFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B574FB29FBC00100C3F048 /* GlobalFunctions.swift */; };
 		23C429D229F3ACB900F9E1AB /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C429D129F3ACB900F9E1AB /* User.swift */; };
 		23C429D429F3AEFD00F9E1AB /* Booking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C429D329F3AEFD00F9E1AB /* Booking.swift */; };
 		83068B0129EF3BD8006962EA /* MICApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83068B0029EF3BD8006962EA /* MICApp.swift */; };
@@ -57,6 +58,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		23B574FB29FBC00100C3F048 /* GlobalFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalFunctions.swift; sourceTree = "<group>"; };
 		23C429D129F3ACB900F9E1AB /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		23C429D329F3AEFD00F9E1AB /* Booking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Booking.swift; sourceTree = "<group>"; };
 		83068AFD29EF3BD8006962EA /* MIC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MIC.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -271,6 +273,7 @@
 			children = (
 				83068B0029EF3BD8006962EA /* MICApp.swift */,
 				83068B0229EF3BD8006962EA /* ContentView.swift */,
+				23B574FB29FBC00100C3F048 /* GlobalFunctions.swift */,
 				838EE69729F346C800804AA5 /* ComedianDetailView.swift */,
 			);
 			path = App;
@@ -356,6 +359,7 @@
 			files = (
 				838EE67229F1E36400804AA5 /* Constant.swift in Sources */,
 				838EE68429F2205400804AA5 /* ComedyClubView.swift in Sources */,
+				23B574FC29FBC00100C3F048 /* GlobalFunctions.swift in Sources */,
 				8326D17229F895EB007C6831 /* CustomShape.swift in Sources */,
 				838EE68829F2C89800804AA5 /* SectionView.swift in Sources */,
 				83068B1029EF3C34006962EA /* LoginView.swift in Sources */,

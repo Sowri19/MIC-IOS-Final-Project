@@ -22,48 +22,7 @@ struct ContentView: View {
     @AppStorage("isComedyClub") var isComedyClub: Bool = false
     @State private var CreateEvent: Bool = false // New state variable
     @State var events: [[String: Any]] = []
-    @State var filteredEvents: [[String: Any]] = []
     
-    func fetchEventsData(completion: @escaping ([[String : Any]]?, Error?) -> Void) {
-        do {
-            guard let url = URL(string: "http://localhost:8080/events/getAll") else {
-                return
-            }
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            let session = URLSession.shared
-            let task = session.dataTask(with: request){ data, response, error in
-                guard let data = data, error == nil else {
-                    print(error?.localizedDescription ?? "Unknown error")
-                    return
-                }
-                if let httpResponse = response as? HTTPURLResponse {
-                    if (200...299).contains(httpResponse.statusCode) {
-                        do {
-                            // make sure this JSON is in the format we expect
-                            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] {
-                                // try to read out a string array
-                                DispatchQueue.main.async {
-                                    completion(json, nil)
-                                }
-                            }
-                        } catch let error as NSError {
-                            print("Failed to load: \(error.localizedDescription)")
-                        }
-                    } else {
-                        print("Server Error: \(httpResponse.statusCode)")
-                        DispatchQueue.main.async {
-                            completion(nil, NSError(domain: "HTTPError", code: httpResponse.statusCode, userInfo: nil))
-                        }
-                    }
-                }
-            }
-            task.resume()
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
     
     var body: some View {
         ZStack {
@@ -169,7 +128,20 @@ struct ContentView: View {
                         }) //: SCROLL
                         Button(action: {
                             CreateEvent = true // Set the state variable to true to show the view
-                            
+                            fetchEvents { (data, error) in
+                                if let data = data {
+                                    for event in data {
+                                        events.append(event)
+                                    }
+                                    for event in events {
+                                        if(event["comedy_club_id"] as! String == userID){
+                                            filteredEvents.append(event)
+                                        }
+                                    }
+                                } else if let error = error {
+                                    // Handle the error
+                                }
+                            }
                         }, label: {
                             // Button label
                             Text("Create Event")
@@ -181,22 +153,6 @@ struct ContentView: View {
                                 .background(RoundedRectangle(cornerRadius: 10)
                                     .fill(Color.yellow))
                                 .padding(.horizontal)
-                                .onAppear() {
-                                    fetchEventsData { (data, error) in
-                                        if let data = data {
-                                            for event in data {
-                                                events.append(event)
-                                            }
-                                            for event in events {
-                                                if(event["comedy_club_id"] as! String == userID){
-                                                    filteredEvents.append(event)
-                                                }
-                                            }
-                                        } else if let error = error {
-                                            // Handle the error
-                                        }
-                                    }
-                                }
                         })
                         Spacer()
                     } //: VSTACK
@@ -232,7 +188,6 @@ struct ComClubCreateEventView: View {
 //    @State private var users: String
     @State private var alertMessageUsers = [String]()
     @State var events: [[String: Any]] = []
-    @State var filteredEvents: [[String: Any]] = []
     
 
     let comedians = ["Dave Chappelle", "Trevor Noah", "Ellen DeGeneres", "Amy Schumer"]
@@ -244,47 +199,6 @@ struct ComClubCreateEventView: View {
     @AppStorage("isDocumentID") var isDocumentID: String = ""
     @AppStorage("profileImage") var profileImage: String = ""
     
-    
-    func fetchEventsData(completion: @escaping ([[String : Any]]?, Error?) -> Void) {
-        do {
-            guard let url = URL(string: "http://localhost:8080/events/getAll") else {
-                return
-            }
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            let session = URLSession.shared
-            let task = session.dataTask(with: request){ data, response, error in
-                guard let data = data, error == nil else {
-                    print(error?.localizedDescription ?? "Unknown error")
-                    return
-                }
-                if let httpResponse = response as? HTTPURLResponse {
-                    if (200...299).contains(httpResponse.statusCode) {
-                        do {
-                            // make sure this JSON is in the format we expect
-                            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] {
-                                // try to read out a string array
-                                DispatchQueue.main.async {
-                                    completion(json, nil)
-                                }
-                            }
-                        } catch let error as NSError {
-                            print("Failed to load: \(error.localizedDescription)")
-                        }
-                    } else {
-                        print("Server Error: \(httpResponse.statusCode)")
-                        DispatchQueue.main.async {
-                            completion(nil, NSError(domain: "HTTPError", code: httpResponse.statusCode, userInfo: nil))
-                        }
-                    }
-                }
-            }
-            task.resume()
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
     
     
     var body: some View {
@@ -306,7 +220,7 @@ struct ComClubCreateEventView: View {
                     .padding()
                     .padding(.top)
                     .onAppear() {
-                        fetchEventsData { (data, error) in
+                        fetchEvents { (data, error) in
                             if let data = data {
                                 for event in data {
                                     events.append(event)
@@ -472,6 +386,21 @@ struct ComClubCreateEventView: View {
                             print(error.localizedDescription)
                         }
                         
+                        fetchEvents { (data, error) in
+                            if let data = data {
+                                for event in data {
+                                    events.append(event)
+                                }
+                                for event in events {
+                                    if(event["comedy_club_id"] as! String == userID){
+                                        filteredEvents.append(event)
+                                    }
+                                }
+                            } else if let error = error {
+                                // Handle the error
+                            }
+                        }
+                        
                     }label: {
                         // Button label
                         Text("Create")
@@ -483,22 +412,6 @@ struct ComClubCreateEventView: View {
                             .background(RoundedRectangle(cornerRadius: 10)
                                 .fill(Color.black))
                             .padding(.horizontal)
-                            .onAppear() {
-                                fetchEventsData { (data, error) in
-                                    if let data = data {
-                                        for event in data {
-                                            events.append(event)
-                                        }
-                                        for event in events {
-                                            if(event["comedy_club_id"] as! String == userID){
-                                                filteredEvents.append(event)
-                                            }
-                                        }
-                                    } else if let error = error {
-                                        // Handle the error
-                                    }
-                                }
-                            }
                     }
                     
                 }
@@ -510,6 +423,11 @@ struct ComClubCreateEventView: View {
                        
         
 }
+
+//protocol MyDelegate {
+//    func fetchEventsData() -> ([[String: Any]]?, Error?)
+//}
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
