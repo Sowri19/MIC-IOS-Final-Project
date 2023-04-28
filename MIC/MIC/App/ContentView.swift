@@ -7,11 +7,11 @@
 
 import SwiftUI
 import FirebaseAuth
+
 import Firebase
 
 struct ContentView: View {
     // MARK: - PROPERTIES
-    
     @EnvironmentObject var Bookings: Bookings
     
     // MARK: - BODY
@@ -168,7 +168,9 @@ struct ComClubCreateEventView: View {
     @State private var selectedImage: UIImage?
     @State private var showImagePicker = false
     
-    @State private var users: String?
+//    @State private var users: String
+    @State private var alertMessageUsers = [String]()
+    @State var events: [[String: Any]] = []
     
 
     let comedians = ["Dave Chappelle", "Trevor Noah", "Ellen DeGeneres", "Amy Schumer"]
@@ -180,6 +182,46 @@ struct ComClubCreateEventView: View {
     @AppStorage("isDocumentID") var isDocumentID: String = ""
     @AppStorage("profileImage") var profileImage: String = ""
     
+    func fetchEventsData(completion: @escaping ([[String : Any]]?, Error?) -> Void) {
+        do {
+            guard let url = URL(string: "http://localhost:8080/events/getAll") else {
+                return
+            }
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            let session = URLSession.shared
+            let task = session.dataTask(with: request){ data, response, error in
+                guard let data = data, error == nil else {
+                    print(error?.localizedDescription ?? "Unknown error")
+                    return
+                }
+                if let httpResponse = response as? HTTPURLResponse {
+                    if (200...299).contains(httpResponse.statusCode) {
+                        do {
+                            // make sure this JSON is in the format we expect
+                            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] {
+                                // try to read out a string array
+                                DispatchQueue.main.async {
+                                    completion(json, nil)
+                                }
+                            }
+                        } catch let error as NSError {
+                            print("Failed to load: \(error.localizedDescription)")
+                        }
+                    } else {
+                        print("Server Error: \(httpResponse.statusCode)")
+                        DispatchQueue.main.async {
+                            completion(nil, NSError(domain: "HTTPError", code: httpResponse.statusCode, userInfo: nil))
+                        }
+                    }
+                }
+            }
+            task.resume()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
     
     var body: some View {
         
@@ -199,6 +241,36 @@ struct ComClubCreateEventView: View {
                     }
                     .padding()
                     .padding(.top)
+                    .onAppear(){
+                        fetchEventsData { (data, error) in
+                            if let data = data {
+//                                for user in data {
+//                                    users.append(user)
+//                                }
+//
+//                                for (i, user) in users.enumerated() {
+//                                    if let isComedian = user["isComedian"] as? Bool, isComedian == false {
+//                                        users.remove(at: i)
+//                                    }
+//                                }
+                                
+                                for event in data {
+                                    events.append(event)
+                                }
+                                
+                                for (i, event) in events.enumerated() {
+                                    if(event["comedy_club_id"] as! String != userID){
+                                        events.remove(at: i)
+                                    }
+                                }
+                                
+                                
+                                
+                            } else if let error = error {
+                                // Handle the error
+                            }
+                        }
+                     }
                     
                     if let image = selectedImage {
                         Image(uiImage: image)
@@ -253,13 +325,24 @@ struct ComClubCreateEventView: View {
                     .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
                     .padding()
                     
+                    //                    HStack {
+                    //                        Image(systemName: "person.crop.circle.dashed")
+                    //                            .foregroundColor(.black)
+                    //                        TextField("Comedian Name", text: $ComedianName)
+                    //                    }
+                    //                    .foregroundColor(.white)
+                    //                    .padding()
+                    //                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
+                    //                    .padding()
                     HStack {
                         HStack {
                             Text("Comedians")
                             Spacer()
                         }
                         .padding(.leading)
-
+                        
+                        
+                        
                         Picker(selection: $selectedComedian, label: Text("")) {
                             ForEach(comedians, id: \.self) { color in
                                 Text(color)
@@ -325,10 +408,14 @@ struct ComClubCreateEventView: View {
                                 }
                                 if let httpResponse = response as? HTTPURLResponse {
                                     if (200...299).contains(httpResponse.statusCode) {
-                                        let responseData = String(data: data, encoding: .utf8)!
-                                        DispatchQueue.main.async {
-                                            alertMessage = responseData
-                                            showAlert = true
+                                        do {
+                                            let responseData = String(data: data, encoding: .utf8)!
+                                            DispatchQueue.main.async {
+                                                alertMessage = responseData
+                                                showAlert = true
+                                            }
+                                        } catch {
+                                            print("Error decoding JSON: \(error.localizedDescription)")
                                         }
                                     } else {
                                         print("Server Error: \(httpResponse.statusCode)")
@@ -360,44 +447,7 @@ struct ComClubCreateEventView: View {
         }
         }
                        
-                       func fetchUserData(completion: @escaping (String?, Error?) -> Void) {
-                           
-                           do {
-                               guard let url = URL(string: "http://localhost:8080/users/getAll") else {
-                                   return
-                               }
-                               
-                               var request = URLRequest(url: url)
-                               request.httpMethod = "GET"
-                               request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                   //            let jsonString = ""
-                   //            request.httpBody = jsonString.data(using: .utf8)
-                               
-                               let session = URLSession.shared
-                               
-                               let task = session.dataTask(with: request){ data, response, error in
-                                   guard let data = data, error == nil else {
-                                       print(error?.localizedDescription ?? "Unknown error")
-                                       return
-                                   }
-                                   if let httpResponse = response as? HTTPURLResponse {
-                                       if (200...299).contains(httpResponse.statusCode) {
-                                           let responseData = String(data: data, encoding: .utf8)!
-                                           DispatchQueue.main.async {
-                   //                            alertMessage = responseData
-                   //                            showAlert = true
-                                               completion(responseData, nil)
-                                           }
-                                       } else {
-                                           print("Server Error: \(httpResponse.statusCode)")
-                                       }
-                                   }
-                               }
-                               task.resume()
-                           } catch {
-                               print(error.localizedDescription)
-                           }
-                       }
+        
 }
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

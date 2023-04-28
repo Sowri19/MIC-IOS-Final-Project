@@ -12,6 +12,7 @@ struct ComedyClubDetailView: View {
     
     var title: String
     
+    
     // MARK: - BODY
 
     var body: some View {
