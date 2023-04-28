@@ -178,13 +178,35 @@ struct ProfileView: View {
         ZStack{
             Color.black.edgesIgnoringSafeArea(.all)
             VStack{
-                Spacer()
                 HStack{
-                    Text("Welcome \(firstName)!!\nYour Profile")
+                    Text("Welcome ")
                         .foregroundColor(.white)
                         .font(.largeTitle)
                         .bold()
+                    + Text(firstName)
+                        .font(.largeTitle)
+                        .bold()
+                        .foregroundColor(.green) +
+                    Text("!!\nYour Profile")
+                        .foregroundColor(.white)
+                        .font(.largeTitle)
+                        .bold()
+
                     Spacer()
+                    if let image = selectedImage {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 80, height: 80)
+                            .clipShape(Circle())
+                    } else {
+                        Image(systemName: "person.circle")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.gray)
+                            .clipShape(Circle())
+                    }
                 }
                 .padding()
                 .padding(.top)
@@ -208,41 +230,56 @@ struct ProfileView: View {
                 }
                 VStack{
                     //  Fetched Comedian View from the database
-                    ScrollView(.vertical, showsIndicators: true, content:{
+                    ScrollView(.vertical, showsIndicators: false, content:{
                         VStack{
-                            if let image = selectedImage {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 80, height: 80)
-                                    .clipShape(Circle())
-                            } else {
-                                Image(systemName: "person.circle")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 80, height: 80)
-                                    .foregroundColor(.gray)
-                                    .clipShape(Circle())
-                            }
-                            LazyVGrid(columns: [GridItem(.flexible(), spacing: 20), GridItem(.flexible(), spacing: 20)]) {
+                            
+                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 120), spacing: 20)], spacing: 20) {
                                 Text("First Name:")
                                     .font(.headline)
-                                TextField("Enter First Name", text: $firstName)
+                                    .foregroundColor(.gray)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                TextEditor(text: $firstName)
+                                    .padding(.horizontal, 10)
+                                    .background(Color.gray.opacity(0.2))
+                                    .cornerRadius(10)
                                     .disabled(true)
+                                    .frame(minHeight: 35)
+                                
                                 Text("Last Name:")
                                     .font(.headline)
-                                TextField("Enter Last Name", text: $lastName)
+                                    .foregroundColor(.gray)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                TextEditor(text: $lastName)
+                                    .padding(.horizontal, 10)
+                                    .background(Color.gray.opacity(0.2))
+                                    .cornerRadius(10)
                                     .disabled(true)
-                                Text("Your Genre:")
+                                    .frame(minHeight: 35)
+                                
+                                Text("Genre:")
                                     .font(.headline)
-                                TextField("Your Genre", text: $Genre)
+                                    .foregroundColor(.gray)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                TextEditor(text: $Genre)
+                                    .padding(.horizontal, 10)
+                                    .background(Color.gray.opacity(0.2))
+                                    .cornerRadius(10)
                                     .disabled(true)
-                                Text("Your Bio:")
+                                    .frame(minHeight: 35)
+                                
+                                Text("Bio:")
                                     .font(.headline)
-                                TextField("Bio", text: $Bio)
-                                    .fixedSize(horizontal: false, vertical: true)
+                                    .foregroundColor(.gray)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                TextEditor(text: $Bio)
+                                    .padding(.horizontal, 10)
+                                    .background(Color.gray.opacity(0.2))
+                                    .cornerRadius(10)
                                     .disabled(true)
+                                    .frame(minHeight: 35)
+                                    
                             }
+                            .padding(.horizontal, 20)
                         }
                         .padding()
                     })

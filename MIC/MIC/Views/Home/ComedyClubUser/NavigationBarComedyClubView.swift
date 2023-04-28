@@ -184,11 +184,34 @@ struct ComClubProfileView: View {
             VStack{
                 Spacer()
                 HStack{
-                    Text("Welcome \(firstName)!!\nYour Profile")
+                    Text("Welcome ")
                         .foregroundColor(.white)
                         .font(.largeTitle)
                         .bold()
+                    + Text(firstName)
+                        .font(.largeTitle)
+                        .bold()
+                        .foregroundColor(.green) +
+                    Text("!!\nYour Profile")
+                        .foregroundColor(.white)
+                        .font(.largeTitle)
+                        .bold()
+
                     Spacer()
+                    if let image = selectedImage {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 80, height: 80)
+                            .clipShape(Circle())
+                    } else {
+                        Image(systemName: "person.circle")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.gray)
+                            .clipShape(Circle())
+                    }
                 }
                 .padding()
                 .padding(.top)
@@ -211,67 +234,54 @@ struct ComClubProfileView: View {
                     }
                 }
                     //  Fetched Comedy Club View from the database
-                ScrollView(.vertical, showsIndicators: true, content:{
+                ScrollView(.vertical, showsIndicators: false, content:{
                     VStack{
-                        if let image = selectedImage {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 80, height: 80)
-                                .clipShape(Circle())
-                        } else {
-                            Image(systemName: "person.circle")
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 80, height: 80)
-                                .foregroundColor(.gray)
-                                .clipShape(Circle())
-                        }
-                        LazyVGrid(columns: [GridItem(.flexible(), spacing: 20), GridItem(.flexible(), spacing: 20)]) {
+                        
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 120), spacing: 20)], spacing: 20) {
                             Text("First Name:")
                                 .font(.headline)
                                 .foregroundColor(.gray)
-                                .padding(.bottom, 5)
-                                .disabled(true)
-                            TextField("Enter First Name", text: $firstName)
-                                .padding(.vertical, 10)
-                                .padding(.horizontal, 20)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            TextEditor(text: $firstName)
+                                .padding(.horizontal, 10)
                                 .background(Color.gray.opacity(0.2))
                                 .cornerRadius(10)
                                 .disabled(true)
+                                .frame(minHeight: 35)
+                            
                             Text("Last Name:")
                                 .font(.headline)
                                 .foregroundColor(.gray)
-                                .padding(.bottom, 5)
-                                .disabled(true)
-                            TextField("Enter Last Name", text: $lastName)
-                                .padding(.vertical, 10)
-                                .padding(.horizontal, 20)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            TextEditor(text: $lastName)
+                                .padding(.horizontal, 10)
                                 .background(Color.gray.opacity(0.2))
                                 .cornerRadius(10)
                                 .disabled(true)
+                                .frame(minHeight: 35)
+                            
                             Text("Point of Contact:")
                                 .font(.headline)
                                 .foregroundColor(.gray)
-                                .padding(.bottom, 5)
-                                .disabled(true)
-                            TextField("Enter Point of Contact", text: $PointOfContact)
-                                .padding(.vertical, 10)
-                                .padding(.horizontal, 20)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            TextEditor(text: $PointOfContact)
+                                .padding(.horizontal, 10)
                                 .background(Color.gray.opacity(0.2))
                                 .cornerRadius(10)
                                 .disabled(true)
+                                .frame(minHeight: 35)
+                            
                             Text("Location:")
                                 .font(.headline)
                                 .foregroundColor(.gray)
-                                .padding(.bottom, 5)
-                                .disabled(true)
-                            TextField("Enter Location", text: $Location)
-                                .padding(.vertical, 10)
-                                .padding(.horizontal, 20)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            TextEditor(text: $Location)
+                                .padding(.horizontal, 10)
                                 .background(Color.gray.opacity(0.2))
                                 .cornerRadius(10)
                                 .disabled(true)
+                            .frame(minHeight: 35)
+                            
                         }
                         .padding(.horizontal, 20)
                     }
