@@ -169,7 +169,7 @@ struct ContentView: View {
                         }) //: SCROLL
                         Button(action: {
                             CreateEvent = true // Set the state variable to true to show the view
-                            
+                            ComedyClubDetailView(title: "Your Events", events: events).fetchFilteredEvents()
                         }, label: {
                             // Button label
                             Text("Create Event")
@@ -181,22 +181,23 @@ struct ContentView: View {
                                 .background(RoundedRectangle(cornerRadius: 10)
                                     .fill(Color.yellow))
                                 .padding(.horizontal)
-                                .onAppear() {
-                                    fetchEventsData { (data, error) in
-                                        if let data = data {
-                                            for event in data {
-                                                events.append(event)
-                                            }
-                                            for event in events {
-                                                if(event["comedy_club_id"] as! String == userID){
-                                                    filteredEvents.append(event)
-                                                }
-                                            }
-                                        } else if let error = error {
-                                            // Handle the error
-                                        }
-                                    }
-                                }
+//                                .onAppear() {
+//                                    fetchEventsData { (data, error) in
+//                                        if let data = data {
+//                                            for event in data {
+//                                                events.append(event)
+//                                            }
+//                                            for event in events {
+//                                                if(event["comedy_club_id"] as! String == userID){
+//                                                    filteredEvents.append(event)
+//                                                }
+//                                            }
+//                                        } else if let error = error {
+//                                            // Handle the error
+//                                        }
+//                                    }
+//                                }
+                            
                         })
                         Spacer()
                     } //: VSTACK
