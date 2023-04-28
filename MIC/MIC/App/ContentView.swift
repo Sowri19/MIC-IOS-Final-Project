@@ -21,6 +21,9 @@ struct ContentView: View {
     @AppStorage("isComedian") var isComedian: Bool = false
     @AppStorage("isComedyClub") var isComedyClub: Bool = false
     @State private var CreateEvent: Bool = false // New state variable
+    @State var events: [[String: Any]] = []
+    
+    
     
     var body: some View {
         ZStack {
@@ -38,6 +41,8 @@ struct ContentView: View {
                                 .first?.windows.first?.safeAreaInsets.top ?? 0)
                             .background(Color.white)
                             .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 5)
+                            
+                                
                         // : Navigation Bar -- till here
                         
                         // Login ID and Sign out Button
@@ -117,7 +122,7 @@ struct ContentView: View {
                         
                         ScrollView(.vertical, showsIndicators: false, content:{
                             VStack(spacing: 0){
-                                ComedyClubDetailView(title: "Your Events")
+                                ComedyClubDetailView(title: "Your Events", events: events)
                                 FooterView()
                                     .padding(.horizontal)
                             } //:VStack
@@ -171,6 +176,7 @@ struct ComClubCreateEventView: View {
 //    @State private var users: String
     @State private var alertMessageUsers = [String]()
     @State var events: [[String: Any]] = []
+    @State var filteredEvents: [[String: Any]] = []
     
 
     let comedians = ["Dave Chappelle", "Trevor Noah", "Ellen DeGeneres", "Amy Schumer"]
@@ -181,6 +187,7 @@ struct ComClubCreateEventView: View {
     @AppStorage("isComedyClub") var isComedyClub: Bool = false
     @AppStorage("isDocumentID") var isDocumentID: String = ""
     @AppStorage("profileImage") var profileImage: String = ""
+    
     
     func fetchEventsData(completion: @escaping ([[String : Any]]?, Error?) -> Void) {
         do {
@@ -223,6 +230,7 @@ struct ComClubCreateEventView: View {
         }
     }
     
+    
     var body: some View {
         
 
@@ -241,36 +249,17 @@ struct ComClubCreateEventView: View {
                     }
                     .padding()
                     .padding(.top)
-                    .onAppear(){
+                    .onAppear() {
                         fetchEventsData { (data, error) in
                             if let data = data {
-//                                for user in data {
-//                                    users.append(user)
-//                                }
-//
-//                                for (i, user) in users.enumerated() {
-//                                    if let isComedian = user["isComedian"] as? Bool, isComedian == false {
-//                                        users.remove(at: i)
-//                                    }
-//                                }
-                                
                                 for event in data {
                                     events.append(event)
                                 }
-                                
-                                for (i, event) in events.enumerated() {
-                                    if(event["comedy_club_id"] as! String != userID){
-                                        events.remove(at: i)
-                                    }
-                                }
-                                
-                                
-                                
                             } else if let error = error {
                                 // Handle the error
                             }
                         }
-                     }
+                    }
                     
                     if let image = selectedImage {
                         Image(uiImage: image)
@@ -438,6 +427,22 @@ struct ComClubCreateEventView: View {
                             .background(RoundedRectangle(cornerRadius: 10)
                                 .fill(Color.black))
                             .padding(.horizontal)
+                            .onAppear() {
+                                fetchEventsData { (data, error) in
+                                    if let data = data {
+                                        for event in data {
+                                            events.append(event)
+                                        }
+                                        for event in events {
+                                            if(event["comedy_club_id"] as! String == userID){
+                                                filteredEvents.append(event)
+                                            }
+                                        }
+                                    } else if let error = error {
+                                        // Handle the error
+                                    }
+                                }
+                            }
                     }
                     
                 }
