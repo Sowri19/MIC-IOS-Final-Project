@@ -7,9 +7,109 @@
 
 import SwiftUI
 import FirebaseAuth
-
 import Firebase
 
+class ClubEventViewModel: ObservableObject {
+    @Published var firstName: String = ""
+    @Published var lastName: String = ""
+    @Published var genre: String = ""
+    @Published var bio: String = ""
+    @Published var picture: UIImage?
+    
+    private let db = Firestore.firestore()
+    private var userRef: DocumentReference?
+    
+    @AppStorage("isDocumentID") var isDocumentID: String = ""
+    @AppStorage("uid") var userID: String = ""
+    
+    init(documentID: String?) {
+        if let documentID = documentID {
+            userRef = db.collection("events").document(documentID)
+            fetchData()
+        } else {
+            userRef = db.collection("events").document()
+        }
+    }
+    
+    func fetchData() {
+        userRef?.getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                self.firstName = data?["firstName"] as? String ?? ""
+                self.lastName = data?["lastName"] as? String ?? ""
+                self.genre = data?["genre"] as? String ?? ""
+                self.bio = data?["bio"] as? String ?? ""
+                if let imageData = data?["picture"] as? Data {
+                    self.picture = UIImage(data: imageData)
+                }
+            } else {
+                print("Error retrieving user document: \(error?.localizedDescription ?? "unknown error")")
+            }
+        }
+    }
+    
+    func saveData(picture: String) {
+        userRef?.setData([
+            "firstName": firstName,
+            "lastName": lastName,
+            "genre": genre,
+            "bio": bio,
+            "picture": picture
+        ]) { error in
+            if let error = error {
+                print("Error saving user document: \(error.localizedDescription)")
+            } else {
+                print("User document saved successfully.")
+            }
+        }
+    }
+}
+
+struct ImagePicker: UIViewControllerRepresentable {
+    typealias UIViewControllerType = UIImagePickerController
+    typealias Coordinator = ImagePickerCoordinator
+    
+    @Environment(\.presentationMode) var presentationMode
+    @Binding var selectedImage: UIImage?
+    var sourceType: UIImagePickerController.SourceType
+    
+    func makeUIViewController(context: UIViewControllerRepresentableContext<ImagePicker>) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.delegate = context.coordinator
+        picker.sourceType = sourceType
+        return picker
+    }
+    
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: UIViewControllerRepresentableContext<ImagePicker>) {
+        
+    }
+    
+    func makeCoordinator() -> ImagePicker.Coordinator {
+        return ImagePickerCoordinator(selectedImage: $selectedImage, presentationMode: presentationMode)
+    }
+    
+    class ImagePickerCoordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+        @Binding var selectedImage: UIImage?
+        let presentationMode: Binding<PresentationMode>
+        
+        init(selectedImage: Binding<UIImage?>, presentationMode: Binding<PresentationMode>) {
+            _selectedImage = selectedImage
+            self.presentationMode = presentationMode
+        }
+        
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            guard let uiImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {
+                return
+            }
+            selectedImage = uiImage
+            presentationMode.wrappedValue.dismiss()
+        }
+        
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            presentationMode.wrappedValue.dismiss()
+        }
+    }
+}
 struct ContentView: View {
     // MARK: - PROPERTIES
     @EnvironmentObject var Bookings: Bookings
@@ -21,8 +121,46 @@ struct ContentView: View {
     @AppStorage("isComedian") var isComedian: Bool = false
     @AppStorage("isComedyClub") var isComedyClub: Bool = false
     @State private var CreateEvent: Bool = false // New state variable
-    @State var events: [[String: Any]] = []
+    @State private var EventName: String = ""
     
+    func fetchEvents(completion: @escaping (String?, Error?) -> Void) {
+        
+        do {
+            guard let url = URL(string: "http://localhost:8080/users/get/\(userID)") else {
+                return
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//            let jsonString = ""
+//            request.httpBody = jsonString.data(using: .utf8)
+            
+            let session = URLSession.shared
+            
+            let task = session.dataTask(with: request){ data, response, error in
+                guard let data = data, error == nil else {
+                    print(error?.localizedDescription ?? "Unknown error")
+                    return
+                }
+                if let httpResponse = response as? HTTPURLResponse {
+                    if (200...299).contains(httpResponse.statusCode) {
+                        let responseData = String(data: data, encoding: .utf8)!
+                        DispatchQueue.main.async {
+//                            alertMessage = responseData
+//                            showAlert = true
+                            completion(responseData, nil)
+                        }
+                    } else {
+                        print("Server Error: \(httpResponse.statusCode)")
+                    }
+                }
+            }
+            task.resume()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
     
     var body: some View {
         ZStack {
@@ -99,7 +237,7 @@ struct ContentView: View {
                         
                         ScrollView(.vertical, showsIndicators: false, content:{
                             VStack(spacing: 0){
-                                ComedianUserDetailView(title: "Your Events", events: events)
+//                                ComedianUserDetailView(title: "Your Events")
                                 FooterView()
                                     .padding(.horizontal)
                             } //:VStack
@@ -118,10 +256,43 @@ struct ContentView: View {
                             .background(Color.white)
                             .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 5)
                         // : Navigation Bar -- till here
-                        
+                        Text("Your Events")
+                            .foregroundColor(.black)
+                            .font(.title3)
+                            .bold()
+                            .frame(maxWidth: .infinity)
+                            .onAppear{
+                                fetchEvents { (data, error) in
+                                    if let data = data?.data(using: .utf8) {
+                                        do {
+                                            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                                                EventName = json["event_name"] as? String ?? ""
+                                            }
+                                        } catch {
+                                            print(error.localizedDescription)
+                                        }
+                                    } else if let error = error {
+                                        // Handle the error
+                                    }
+                                }
+                            }
                         ScrollView(.vertical, showsIndicators: false, content:{
                             VStack(spacing: 0){
-                                ComedyClubDetailView(title: "Your Events", events: events)
+                                LazyVGrid(columns: [GridItem(.adaptive(minimum: 120), spacing: 20)], spacing: 20) {
+                                    Text("First Name:")
+                                        .font(.headline)
+                                        .foregroundColor(.gray)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    TextEditor(text: $EventName)
+                                        .padding(.horizontal, 10)
+                                        .background(Color.gray.opacity(0.2))
+                                        .cornerRadius(10)
+                                        .disabled(true)
+                                        .frame(minHeight: 35)
+                                }
+                                .padding(.horizontal, 20)
+
+                                
                                 FooterView()
                                     .padding(.horizontal)
                             } //:VStack
@@ -129,20 +300,7 @@ struct ContentView: View {
                         Button(action: {
                             CreateEvent = true // Set the state variable to true to show the view
 
-                            fetchEvents { (data, error) in
-                                if let data = data {
-                                    for event in data {
-                                        events.append(event)
-                                    }
-                                    for event in events {
-                                        if(event["comedy_club_id"] as! String == userID){
-                                            filteredEvents.append(event)
-                                        }
-                                    }
-                                } else if let error = error {
-                                    // Handle the error
-                                }
-                            }
+                            
 
                         }, label: {
                             // Button label
@@ -202,9 +360,7 @@ struct ComClubCreateEventView: View {
     @AppStorage("isComedyClub") var isComedyClub: Bool = false
     @AppStorage("isDocumentID") var isDocumentID: String = ""
     @AppStorage("profileImage") var profileImage: String = ""
-    
-    
-    
+
     var body: some View {
         
 
@@ -224,15 +380,7 @@ struct ComClubCreateEventView: View {
                     .padding()
                     .padding(.top)
                     .onAppear() {
-                        fetchEvents { (data, error) in
-                            if let data = data {
-                                for event in data {
-                                    events.append(event)
-                                }
-                            } else if let error = error {
-                                // Handle the error
-                            }
-                        }
+                        
                     }
                     
                     if let image = selectedImage {
@@ -288,15 +436,7 @@ struct ComClubCreateEventView: View {
                     .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
                     .padding()
                     
-                    //                    HStack {
-                    //                        Image(systemName: "person.crop.circle.dashed")
-                    //                            .foregroundColor(.black)
-                    //                        TextField("Comedian Name", text: $ComedianName)
-                    //                    }
-                    //                    .foregroundColor(.white)
-                    //                    .padding()
-                    //                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
-                    //                    .padding()
+                   
                     HStack {
                         HStack {
                             Text("Comedians")
@@ -390,20 +530,7 @@ struct ComClubCreateEventView: View {
                             print(error.localizedDescription)
                         }
                         
-                        fetchEvents { (data, error) in
-                            if let data = data {
-                                for event in data {
-                                    events.append(event)
-                                }
-                                for event in events {
-                                    if(event["comedy_club_id"] as! String == userID){
-                                        filteredEvents.append(event)
-                                    }
-                                }
-                            } else if let error = error {
-                                // Handle the error
-                            }
-                        }
+                       
                         
                     }label: {
                         // Button label

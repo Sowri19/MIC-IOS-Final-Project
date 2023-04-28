@@ -63,7 +63,9 @@ struct NavigationBarComedyClubView: View {
     @State private var isAnimated: Bool = false
     @AppStorage("uid") var userID: String = ""
     @State private var ClubProfileView: Bool = false // New state variable
-    
+    @AppStorage("isDocumentID") var isDocumentID: String = ""
+   
+   
     // MARK: - BODY
 
     var body: some View {
@@ -76,12 +78,7 @@ struct NavigationBarComedyClubView: View {
                         isAnimated.toggle()
                     }
                 })
-            Button(action: {}, label:{
-                Image(systemName: "magnifyingglass")
-                    .font(.title)
-                    .foregroundColor(.black)
-            }) //: Button
-
+           
             Spacer()
             Button(action: {
                 let firebaseAuth = Auth.auth()
@@ -114,7 +111,6 @@ struct NavigationBarComedyClubView: View {
                         }) //: Button
                     }
                     .sheet(isPresented: $ClubProfileView) {
-                        // Present the ProfileView modally
                         ComClubProfileView()
                     }
                 }
@@ -126,6 +122,7 @@ struct ComClubProfileView: View {
     @State private var lastName: String = ""
     @State private var Location: String = ""
     @State var PointOfContact: String = ""
+    @State private var picture: UIImage?
     
     @State private var location: String = ""
     @State var pointOfContact: String = ""
@@ -136,48 +133,9 @@ struct ComClubProfileView: View {
     @State private var selectedImage: UIImage?
     @State private var showImagePicker = false
 
-
+    @AppStorage("isDocumentID") var isDocumentID: String = ""
     @AppStorage("uid") var userID: String = ""
 
-    func fetchUserData(completion: @escaping (String?, Error?) -> Void) {
-        
-        do {
-            guard let url = URL(string: "http://localhost:8080/users/get/\(userID)") else {
-                return
-            }
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-//            let jsonString = ""
-//            request.httpBody = jsonString.data(using: .utf8)
-            
-            let session = URLSession.shared
-            
-            let task = session.dataTask(with: request){ data, response, error in
-                guard let data = data, error == nil else {
-                    print(error?.localizedDescription ?? "Unknown error")
-                    return
-                }
-                if let httpResponse = response as? HTTPURLResponse {
-                    if (200...299).contains(httpResponse.statusCode) {
-                        let responseData = String(data: data, encoding: .utf8)!
-                        DispatchQueue.main.async {
-//                            alertMessage = responseData
-//                            showAlert = true
-                            completion(responseData, nil)
-                        }
-                    } else {
-                        print("Server Error: \(httpResponse.statusCode)")
-                    }
-                }
-            }
-            task.resume()
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-    
     var body: some View {
         ZStack{
             Color.black.edgesIgnoringSafeArea(.all)
@@ -215,21 +173,20 @@ struct ComClubProfileView: View {
                 }
                 .padding()
                 .padding(.top)
-                .onAppear {
-                    fetchUserData { (data, error) in
-                        if let data = data?.data(using: .utf8) {
-                            do {
-                                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                                    firstName = json["firstName"] as? String ?? ""
-                                    lastName = json["lastName"] as? String ?? ""
-                                    Location = json["location"] as? String ?? ""
-                                    PointOfContact = json["poc"] as? String ?? ""
-                                }
-                            } catch {
-                                print(error.localizedDescription)
+                .onAppear{
+                    let db = Firestore.firestore()
+                    db.collection("users").document(isDocumentID).getDocument { (document, error) in
+                        if let document = document, document.exists {
+                            self.firstName = document.data()?["firstName"] as? String ?? ""
+                            self.lastName = document.data()?["lastName"] as? String ?? ""
+                            self.Location = document.data()?["Location"] as? String ?? ""
+                            self.PointOfContact = document.data()?["PointOfContact"] as? String ?? ""
+                            if let imageData = document.data()?["picture"] as? Data {
+                                self.selectedImage = UIImage(data: imageData)
                             }
-                        } else if let error = error {
-                            // Handle the error
+                            print("Document ID: \(document.documentID)")
+                        } else {
+                            print("Error retrieving document ID: \(error?.localizedDescription ?? "unknown error")")
                         }
                     }
                 }
@@ -330,74 +287,38 @@ struct ComClubProfileView: View {
                 }
                 Spacer()
                 Button{
-                    
-                    let imageData = selectedImage?.pngData()
-                    let base64ImageString = imageData?.base64EncodedString(options: .lineLength64Characters)
-                                                            
-                    do {
-                        let body = [
-                            "id": userID,
-                            "poc": pointOfContact,
-                            "location": location,
-                            "picture": base64ImageString ?? ""
-                        ] as [String : Any]
-                        let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
-                        let jsonString = String(data: jsonData, encoding: .utf8)!
-                        print(jsonString)
-                        guard let url = URL(string: "http://localhost:8080/users/update") else {
-                            return
+                    let db = Firestore.firestore()
+                    let documentRef = db.collection("users").document(isDocumentID)
+                    let imageData = selectedImage?.jpegData(compressionQuality: 0.5)
+                    documentRef.setData([
+                        "PointOfContact": pointOfContact,
+                        "Location": location,
+                        "picture": imageData ?? Data()
+                    ], merge: true) { err in
+                        if let err = err {
+                            print("Error appending data: \(err)")
+                        } else {
+                            print("Data appended successfully!")
                         }
-                                                                                    
-                        var request = URLRequest(url: url)
-                        request.httpMethod = "POST"
-                        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                                                                                    
-                        request.httpBody = jsonString.data(using: .utf8)
-                                                                                    
-                        let session = URLSession.shared
-                                                                                    
-                        let task = session.dataTask(with: request){ data, response, error in
-                        guard let data = data, error == nil else {
-                            print(error?.localizedDescription ?? "Unknown error")
-                            return
-                        }
-                        if let httpResponse = response as? HTTPURLResponse {
-                            if (200...299).contains(httpResponse.statusCode) {
-                                let responseData = String(data: data, encoding: .utf8)!
-                                DispatchQueue.main.async {
-                                    alertMessage = responseData
-                                    showAlert = true
-                                }
-                            } else {
-                            print("Server Error: \(httpResponse.statusCode)")
+                    }
+                    selectedImage = nil
+                    pointOfContact = ""
+                    location = ""
+                    db.collection("users").document(isDocumentID).getDocument { (document, error) in
+                        if let document = document, document.exists {
+                            self.firstName = document.data()?["firstName"] as? String ?? ""
+                            self.lastName = document.data()?["lastName"] as? String ?? ""
+                            self.Location = document.data()?["Location"] as? String ?? ""
+                            self.PointOfContact = document.data()?["PointOfContact"] as? String ?? ""
+                            if let imageData = document.data()?["picture"] as? Data {
+                                self.selectedImage = UIImage(data: imageData)
                             }
+                            print("Document ID: \(document.documentID)")
+                        } else {
+                            print("Error retrieving document ID: \(error?.localizedDescription ?? "unknown error")")
                         }
                     }
-                    task.resume()
-                    
-                    fetchUserData { (data, error) in
-                        if let data = data?.data(using: .utf8) {
-                            do {
-                                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                                    firstName = json["firstName"] as? String ?? ""
-                                    lastName = json["lastName"] as? String ?? ""
-                                    Location = json["location"] as? String ?? ""
-                                    PointOfContact = json["poc"] as? String ?? ""
-                                }
-                            } catch {
-                                print(error.localizedDescription)
-                            }
-                        } else if let error = error {
-                            // Handle the error
-                        }
-                    }
-                       pointOfContact = ""
-                        location = ""
-                    } catch {
-                    print(error.localizedDescription)
-                    }
-                    
-                }label: {
+                    }label: {
                     // Button label
                     Text("Update your Profile")
                         .foregroundColor(.black)
