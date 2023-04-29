@@ -36,6 +36,8 @@ class ComedyClubGridViewViewModel: ObservableObject {
 
 struct ComedyClubGridView: View {
     @StateObject var viewModel = ComedyClubGridViewViewModel()
+    
+    @State private var showCCProfileView: Bool = false
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -67,7 +69,9 @@ struct ComedyClubGridView: View {
 //                            .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 0)
 //                        }
 //                        .buttonStyle(PlainButtonStyle())
-                        Button(action: {}, label: {
+                        Button(action: {
+                            self.showCCProfileView = true
+                        }, label: {
                             HStack(alignment: .center, spacing: 6){
                                 // Show the comedy club's picture
                                 Image(uiImage: comedyClub.picture ?? UIImage(systemName: "person.circle.fill")!)
@@ -86,6 +90,9 @@ struct ComedyClubGridView: View {
                             .background(
                                 RoundedRectangle(cornerRadius: 12).stroke(Color.gray, lineWidth: 1))
                         }) //: Button
+                        .sheet(isPresented: $showCCProfileView){
+                            ComedyClubProfileView1(clubName: comedyClub.firstName, emailAddress: comedyClub.pointOfContact, address: comedyClub.location, businessType: comedyClub.genre, rating: 5)
+                        }
                     }
                 }
             }
@@ -97,6 +104,136 @@ struct ComedyClubGridView: View {
             }
         }.background(Color(hex: "b96f39"))
 
+    }
+}
+
+struct ComedyClubProfileView1: View {
+    
+    let clubName: String
+    let emailAddress: String
+    let address: String
+    let businessType: String
+    let rating: Int
+    
+    var body: some View {
+        VStack {
+            ZStack {
+                Color(red: 0.95, green: 0.27, blue: 0.27)
+                    .ignoresSafeArea()
+                VStack {
+                    Text(clubName)
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding(.top, 30)
+                    
+                    Spacer()
+                    
+                    Image("laugh_factory_logo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 150, height: 150)
+                        .padding(.bottom, 20)
+                }
+            }
+            
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Text("Email Address:")
+                        .font(.headline)
+                        .foregroundColor(Color(red: 0.2, green: 0.2, blue: 0.2))
+                        .padding(.horizontal, 10)
+                    Spacer()
+                }
+                Text(emailAddress)
+                    .font(.subheadline)
+                    .padding(.horizontal, 10)
+            }
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.red, lineWidth: 2)
+            )
+            .padding(.horizontal, 20)
+            
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Text("Address:")
+                        .font(.headline)
+                        .foregroundColor(Color(red: 0.2, green: 0.2, blue: 0.2))
+                        .padding(.horizontal, 10)
+                    Spacer()
+                }
+                Text(address)
+                    .font(.subheadline)
+                    .padding(.horizontal, 10)
+            }
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.blue, lineWidth: 2)
+            )
+            .padding(.horizontal, 20)
+            
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Text("Business Type:")
+                        .font(.headline)
+                        .foregroundColor(Color(red: 0.2, green: 0.2, blue: 0.2))
+                        .padding(.horizontal, 10)
+                    Spacer()
+                }
+                Text(businessType)
+                    .font(.subheadline)
+                    .padding(.horizontal, 10)
+            }
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.green, lineWidth: 2)
+            )
+            .padding(.horizontal, 20)
+            
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Text("Rating:")
+                        .font(.headline)
+                        .foregroundColor(Color(red: 0.2, green: 0.2, blue: 0.2))
+                        .padding(.horizontal, 10)
+                    Spacer()
+                }
+                Text(String(rating))
+                    .font(.subheadline)
+                    .padding(.horizontal, 10)
+            }
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.yellow, lineWidth: 2)
+            )
+            .padding(.horizontal, 20)
+            
+            Spacer()
+            
+            Rectangle()
+                .fill(Color(red: 0.2, green: 0.2, blue: 0.2))
+                .frame(height: 1)
+                .padding(.horizontal, 20)
+            
+            Spacer()
+            
+            Text("About Us")
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(Color(red: 0.2, green: 0.2, blue: 0.2))
+                .padding(.top, 10)
+            
+            Text("The Laugh Factory has been a staple of the comedy scene since it opened its doors in 1979. It has hosted some of the biggest names in comedy and continues to be a premier destination for both performers and audiences alike.")
+                .font(.body)
+                .multilineTextAlignment(.leading)
+                .foregroundColor(Color(red: 0.2, green: 0.2, blue: 0.2))
+                .padding(.top, 10)
+                .padding(.horizontal, 20)
+            
+        }
+        .background(Color(red: 0.98, green: 0.98, blue: 0.98))
+        .edgesIgnoringSafeArea(.all)
     }
 }
 
