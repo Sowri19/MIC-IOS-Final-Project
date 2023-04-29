@@ -56,6 +56,7 @@
 		838EE69C29F34F1500804AA5 /* HeaderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE69B29F34F1500804AA5 /* HeaderDetailView.swift */; };
 		838EE69E29F350CE00804AA5 /* TopPartDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE69D29F350CE00804AA5 /* TopPartDetailView.swift */; };
 		83B9778429FC838300530AC1 /* ComedianStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B9778329FC838300530AC1 /* ComedianStruct.swift */; };
+		83B9778629FCB14A00530AC1 /* EventMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B9778529FCB14A00530AC1 /* EventMode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -108,6 +109,7 @@
 		838EE69B29F34F1500804AA5 /* HeaderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderDetailView.swift; sourceTree = "<group>"; };
 		838EE69D29F350CE00804AA5 /* TopPartDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopPartDetailView.swift; sourceTree = "<group>"; };
 		83B9778329FC838300530AC1 /* ComedianStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianStruct.swift; sourceTree = "<group>"; };
+		83B9778529FCB14A00530AC1 /* EventMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -256,6 +258,7 @@
 				23C429D129F3ACB900F9E1AB /* User.swift */,
 				23C429D329F3AEFD00F9E1AB /* Booking.swift */,
 				83B9778329FC838300530AC1 /* ComedianStruct.swift */,
+				83B9778529FCB14A00530AC1 /* EventMode.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -401,6 +404,7 @@
 				8326D16A29F74DB8007C6831 /* NavigationBarComedyClubView.swift in Sources */,
 				838EE69C29F34F1500804AA5 /* HeaderDetailView.swift in Sources */,
 				8326D16C29F750B4007C6831 /* ComedyClubProfileView.swift in Sources */,
+				83B9778629FCB14A00530AC1 /* EventMode.swift in Sources */,
 				83068B0129EF3BD8006962EA /* MICApp.swift in Sources */,
 				838EE67629F1EB3300804AA5 /* NavigationBarView.swift in Sources */,
 				838EE69429F33C9900804AA5 /* ComedyCategoryGridView.swift in Sources */,
