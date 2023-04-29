@@ -74,11 +74,11 @@ struct ComedianUserDetailView: View {
                                 .foregroundColor(.secondary)
                             Text(event.eventName)
                                 .font(.headline)
-                            Text("Comedian:")
+                            Text("Comedy Club ID:")
                             .font(.caption)
                             .foregroundColor(.secondary)
 
-                            Text(event.comedianName)
+                            Text(event.comedyClubID)
                                 .font(.headline)
                                 .foregroundColor(.secondary)
                             Text("Price:")

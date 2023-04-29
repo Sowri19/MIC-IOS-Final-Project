@@ -6,51 +6,107 @@
 //
 
 import SwiftUI
+import Firebase
 
+class ClubTileViewViewModel: ObservableObject {
+    @AppStorage("uid") var userID: String = ""
+    @Published var events: [Event] = []
+    
+    func loadEventData() {
+        let db = Firestore.firestore()
+        db.collection("events")
+            .whereField("comedy_club_id", isEqualTo: userID)
+            .getDocuments { (querySnapshot, error) in
+                if let error = error {
+                    print("Error retrieving documents: \(error.localizedDescription)")
+                    return
+                }
+                var events: [Event] = []
+                for document in querySnapshot!.documents {
+                    let eventName = document.data()["eventName"] as? String ?? ""
+                    let description = document.data()["description"] as? String ?? ""
+                    let price = document.data()["price"] as? Int ?? 0
+                    let date = document.data()["date"] as? String ?? ""
+                    let comedianName = document.data()["comedian_name"] as? String ?? ""
+                    let comedyClubID = document.data()["comedy_club_id"] as? String ?? ""
+                    var picture: UIImage?
+                    if let imageData = document.data()["picture"] as? Data {
+                        picture = UIImage(data: imageData)
+                    }
+                    let event = Event(id: document.documentID, comedianID: self.userID, comedianName: comedianName, comedyClubID: comedyClubID, date: date, description: description, eventName: eventName, picture: picture, price: price)
+
+                    events.append(event)
+                }
+                DispatchQueue.main.async {
+                    self.events = events
+                }
+            }
+    }
+}
 struct ComedyClubDetailView: View {
     // MARK: - PREVIEW
     
-    @AppStorage("uid") var userID: String = ""
-    @State var title: String
-    @State var events: [[String: Any]] = []
-    @State var filteredEvents: [[String: Any]] = []
-
-    init(title: String, events: [[String: Any]]) {
-        self._title = State(initialValue: title)
-        self._events = State(initialValue: events)
-    }
-
+    @StateObject var viewModel = ClubTileViewViewModel()
     
     // MARK: - BODY
-
+    
     var body: some View {
-        HStack{
-            Text(title)
-                .font(.largeTitle)
-                .fontWeight(.heavy)
-                .onAppear() {
-//                    fetchEvents { (data, error) in
-//                        if let data = data {
-//                            for event in data {
-//                                events.append(event)
-//                            }
-//                            for event in events {
-//                                if(event["comedy_club_id"] as! String == userID){
-//                                    filteredEvents.append(event)
-//                                }
-//                            }
-//                        } else if let error = error {
-//                            // Handle the error
-//                        }
-//                    }
-                }
+        VStack {
+            // Display each event in a button tile
+            ForEach(viewModel.events) { event in
+                Button(action: {
+                    // Handle button tap
+                }, label: {
+                    // Customize the appearance of the button tile
+                    // Customize the appearance of the button tile
+                    HStack(alignment: .center, spacing: 8) {
+                        if let picture = event.picture {
+                            Image(uiImage: picture)
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 150, height: 150)
+                                .padding(.leading, 8)
+                                .cornerRadius(8)
+                        }
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Event Name:")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Text(event.eventName)
+                                .font(.headline)
+                            Text("Comedian:")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
 
-            if let filteredEvents = filteredEvents.first?["event_name"] as? String {
-                Text(filteredEvents)
-            } else {
-                Text("No events found")
+                            Text(event.comedianName)
+                                .font(.headline)
+                                .foregroundColor(.secondary)
+                            Text("Price:")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Text("$\(event.price, specifier: "%.2f")")
+                                .font(.headline)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                    }
+                    .padding()
+                    .background(
+                        LinearGradient(
+                                    gradient: Gradient(colors: [Color.red, Color.yellow]),
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                    )
+                    .cornerRadius(8)
+                    .shadow(radius: 4)
+                })
+                .buttonStyle(PlainButtonStyle())
             }
-            Spacer()
+        }
+        .frame(maxWidth: .infinity)
+        .onAppear {
+            viewModel.loadEventData()
         }
     }
 }

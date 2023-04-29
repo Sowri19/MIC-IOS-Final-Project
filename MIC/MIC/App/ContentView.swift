@@ -247,38 +247,11 @@ struct ContentView: View {
                             .font(.title3)
                             .bold()
                             .frame(maxWidth: .infinity)
-                            .onAppear{
-                                fetchEvents { (data, error) in
-                                    if let data = data?.data(using: .utf8) {
-                                        do {
-                                            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                                                EventName = json["event_name"] as? String ?? ""
-                                            }
-                                        } catch {
-                                            print(error.localizedDescription)
-                                        }
-                                    } else if let error = error {
-                                        // Handle the error
-                                    }
-                                }
-                            }
+                            
                         ScrollView(.vertical, showsIndicators: false, content:{
                             VStack(spacing: 0){
-                                LazyVGrid(columns: [GridItem(.adaptive(minimum: 120), spacing: 20)], spacing: 20) {
-                                    Text("First Name:")
-                                        .font(.headline)
-                                        .foregroundColor(.gray)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                    TextEditor(text: $EventName)
-                                        .padding(.horizontal, 10)
-                                        .background(Color.gray.opacity(0.2))
-                                        .cornerRadius(10)
-                                        .disabled(true)
-                                        .frame(minHeight: 35)
-                                }
-                                .padding(.horizontal, 20)
-
                                 
+                                ComedyClubDetailView()
                                 FooterView()
                                     .padding(.horizontal)
                             } //:VStack
