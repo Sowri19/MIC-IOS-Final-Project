@@ -45,13 +45,15 @@ class HomeTileViewViewModel: ObservableObject {
 }
 struct FeaturedTabView: View {
     @StateObject var viewModel = HomeTileViewViewModel() // Create a new instance of the view model
-    @State private var showEventBookingForm: Bool = false
+       @State private var showEventBookingForm: Bool = false
+       @State private var selectedEvent: Event? // Add a @State variable to keep track of the selected event
     
     var body: some View {
         TabView {
             ForEach(viewModel.events) { event in
                 Button(action: {
                     // Handle button tap
+                    self.selectedEvent = event // Set the selected event
                     self.showEventBookingForm = true
                 }, label: {
                     // Customize the appearance of the button tile
@@ -95,10 +97,8 @@ struct FeaturedTabView: View {
                     .shadow(radius: 4)
                 })
                 .buttonStyle(PlainButtonStyle())
-                .sheet(isPresented: $showEventBookingForm) {
-                    EventsBookingView(event: event.eventName, comedian: event.comedianName, club: event.comedyClubID, date: event.date, description: event.description, price: event.price)
             }
-        }
+                    }
         .frame(height: 200)
         .frame(maxWidth: .infinity)
         .onAppear {
@@ -106,11 +106,14 @@ struct FeaturedTabView: View {
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
         .edgesIgnoringSafeArea(.all) // Ignore safe area to remove white spaces
+        .sheet(isPresented: $showEventBookingForm) {
+            if let selectedEvent = selectedEvent {
+                EventsBookingView(event: selectedEvent.eventName, comedian: selectedEvent.comedianName, club: selectedEvent.comedyClubID, date: selectedEvent.date, description: selectedEvent.description, price: String(selectedEvent.price))
+            }
+        }
     }
-
-
-
 }
+
 
 struct EventsBookingView: View {
     let event: String
@@ -136,7 +139,7 @@ struct EventsBookingView: View {
                 Text("Comedian: \(comedian)")
                 Text("Club: \(club)")
                 Text("Date: \(date)")
-                Text(description)
+                Text("Description: \(description)")
                     .multilineTextAlignment(.leading)
                     .foregroundColor(.gray)
             }
@@ -145,7 +148,7 @@ struct EventsBookingView: View {
             Divider()
             
             HStack {
-                Text(price)
+                Text("$\(price)")
                     .font(.title)
                     .bold()
                     .foregroundColor(.green)

@@ -45,6 +45,7 @@ struct ComedianView: View {
     // MARK: - PROPERTY
     @StateObject var viewModel = ComedianGViewViewModel()
     @State private var showComedianProfile: Bool = false
+    @State private var selectedComedian: Comedians? // Add a @State variable to keep track of the selected comedian
     
     // MARK: - BODY
     var body: some View {
@@ -55,6 +56,7 @@ struct ComedianView: View {
             ], spacing: 15) {
                 ForEach(viewModel.comedians) { comedian in
                     Button(action: {
+                        self.selectedComedian = comedian
                         self.showComedianProfile = true
                     }, label: {
                         VStack(alignment: .center, spacing: 10) {
@@ -84,10 +86,6 @@ struct ComedianView: View {
                         .padding(.horizontal, 20)
                     }) //: Button
                     .buttonStyle(PlainButtonStyle())
-                    .sheet(isPresented: $showComedianProfile) {
-                        ComedianProfileView1(firstName: comedian.firstName, lastName: comedian.lastName, rating: 5, genre: comedian.genre, bio: comedian.bio, profileImage: comedian.picture ?? UIImage())
-                }
-                
                 }
             } //: LazyVGrid
             .padding(.top, 15)
@@ -95,9 +93,14 @@ struct ComedianView: View {
                 viewModel.loadComediansData()
             }
         } //: ScrollView
-
+        .sheet(isPresented: $showComedianProfile) {
+            if let comedian = selectedComedian {
+                ComedianProfileView1(firstName: comedian.firstName, lastName: comedian.lastName, rating: 5, genre: comedian.genre, bio: comedian.bio, profileImage: comedian.picture ?? UIImage())
+            }
+        }
     }
 }
+
 
 extension Color {
     init(hex: String) {
