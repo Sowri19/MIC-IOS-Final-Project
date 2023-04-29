@@ -45,12 +45,14 @@ class HomeTileViewViewModel: ObservableObject {
 }
 struct FeaturedTabView: View {
     @StateObject var viewModel = HomeTileViewViewModel() // Create a new instance of the view model
+    @State private var showEventBookingForm: Bool = false
     
     var body: some View {
         TabView {
             ForEach(viewModel.events) { event in
                 Button(action: {
                     // Handle button tap
+                    self.showEventBookingForm = true
                 }, label: {
                     // Customize the appearance of the button tile
                     VStack(alignment: .center, spacing: 8) {
@@ -93,6 +95,8 @@ struct FeaturedTabView: View {
                     .shadow(radius: 4)
                 })
                 .buttonStyle(PlainButtonStyle())
+                .sheet(isPresented: $showEventBookingForm) {
+                    EventsBookingView(event: event.eventName, comedian: event.comedianName, club: event.comedyClubID, date: event.date, description: event.description, price: event.price)
             }
         }
         .frame(height: 200)
@@ -106,6 +110,73 @@ struct FeaturedTabView: View {
 
 
 
+}
+
+struct EventsBookingView: View {
+    let event: String
+    let comedian: String
+    let club: String
+    let date: String
+    let description: String
+    let price: String
+    
+    @State private var isBooked = false
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Event Booking")
+                .font(.title)
+                .bold()
+                .padding(.top, 20)
+            
+            VStack(alignment: .leading, spacing: 10) {
+                Text(event)
+                    .font(.title)
+                    .bold()
+                Text("Comedian: \(comedian)")
+                Text("Club: \(club)")
+                Text("Date: \(date)")
+                Text(description)
+                    .multilineTextAlignment(.leading)
+                    .foregroundColor(.gray)
+            }
+            .padding(.horizontal, 20)
+            
+            Divider()
+            
+            HStack {
+                Text(price)
+                    .font(.title)
+                    .bold()
+                    .foregroundColor(.green)
+                
+                Spacer()
+                
+                Button(action: {
+                    isBooked.toggle()
+                }) {
+                    Text(isBooked ? "Booked!" : "Book Now")
+                        .font(.headline)
+                        .bold()
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .background(isBooked ? Color.gray : Color.green)
+                        .cornerRadius(10)
+                }
+                .disabled(isBooked)
+            }
+            .padding(.horizontal, 20)
+            .padding(.bottom, 20)
+            
+            Spacer()
+        }
+        .padding()
+        .background(Color.yellow.opacity(0.1))
+        .cornerRadius(20)
+        .shadow(radius: 10)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
 }
 
 struct FeaturedTabView_Previews: PreviewProvider {
