@@ -38,7 +38,8 @@ struct ComedyClubGridView: View {
     @StateObject var viewModel = ComedyClubGridViewViewModel()
     
     @State private var showCCProfileView: Bool = false
-
+    @State private var selectedClub: ComedyClub? // Add a @State variable to keep track of the selected comedian
+    
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHGrid(rows: gridLayout, alignment: .center, spacing: columnSpacing, pinnedViews: []) {
@@ -71,6 +72,7 @@ struct ComedyClubGridView: View {
 //                        .buttonStyle(PlainButtonStyle())
                         Button(action: {
                             self.showCCProfileView = true
+                            self.selectedClub = comedyClub
                         }, label: {
                             HStack(alignment: .center, spacing: 6){
                                 // Show the comedy club's picture
@@ -102,7 +104,7 @@ struct ComedyClubGridView: View {
             .onAppear {
                 viewModel.loadData()
             }
-        }.background(Color(hex: "b96f39"))
+        }.background(Color(hex: "ecc985"))
 
     }
 }
