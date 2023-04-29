@@ -73,7 +73,7 @@ struct ComedyCategoryGridView: View {
                 viewModel.loadComediansData() // call the correct method name here
             }
         } //:SCROLL
-        .background(Color(.lightGray))
+        .background(Color(hex: "2d9abf"))
     }
 }
 

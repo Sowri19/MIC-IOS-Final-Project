@@ -73,6 +73,7 @@ struct ComedianView: View {
                                 .foregroundColor(.primary)
                         } //: VStack
                         .padding()
+                        .background(Color(hex: "fae7b6"))
                         .frame(maxWidth: .infinity)
                         .background(Color.white)
                         .cornerRadius(20)
@@ -88,6 +89,22 @@ struct ComedianView: View {
             }
         } //: ScrollView
 
+    }
+}
+
+extension Color {
+    init(hex: String) {
+        let scanner = Scanner(string: hex)
+        var rgbValue: UInt64 = 0
+        scanner.scanHexInt64(&rgbValue)
+
+        self.init(
+            .sRGB,
+            red: Double((rgbValue >> 16) & 0xff) / 255,
+            green: Double((rgbValue >> 08) & 0xff) / 255,
+            blue: Double((rgbValue >> 00) & 0xff) / 255,
+            opacity: 1
+        )
     }
 }
 
