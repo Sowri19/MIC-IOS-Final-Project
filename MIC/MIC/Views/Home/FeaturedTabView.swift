@@ -8,6 +8,7 @@
 import SwiftUI
 import Firebase
 
+
 class HomeTileViewViewModel: ObservableObject {
     @AppStorage("uid") var userID: String = ""
     @Published var events: [Event] = []
@@ -116,12 +117,16 @@ struct FeaturedTabView: View {
 
 
 struct EventsBookingView: View {
+    let id = UUID()
     let event: String
     let comedian: String
     let club: String
     let date: String
     let description: String
     let price: String
+    
+    @AppStorage("isDocumentID") var isDocumentID: String = ""
+    @AppStorage("uid") var userID: String = ""
     
     @State private var isBooked = false
     
@@ -157,6 +162,23 @@ struct EventsBookingView: View {
                 
                 Button(action: {
                     isBooked.toggle()
+                    let db = Firestore.firestore()
+                    let documentRef = db.collection("users").document(isDocumentID)
+                    documentRef.setData([
+                        "id": id.uuidString,
+                        "event": event,
+                        "comedian": comedian,
+                        "club": club,
+                        "date": date,
+                        "description": description,
+                        "price": price
+                    ], merge: true) { err in
+                        if let err = err {
+                            print("Error appending data: \(err)")
+                        } else {
+                            print("Data appended successfully!")
+                        }
+                    }
                 }) {
                     Text(isBooked ? "Booked!" : "Book Now")
                         .font(.headline)
@@ -179,8 +201,7 @@ struct EventsBookingView: View {
         .cornerRadius(20)
         .shadow(radius: 10)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
+    }}
 
 struct FeaturedTabView_Previews: PreviewProvider {
     static var previews: some View {
