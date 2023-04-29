@@ -185,7 +185,8 @@ struct ContentView: View {
                         ScrollView(.vertical, showsIndicators: false, content:{
                             VStack(spacing: 0){
                                 FeaturedTabView()
-                                    .padding(.vertical, 20)
+                                    .padding(.vertical, 2)
+                                    .padding(.horizontal, 0)
                                 ComedyClubGridView()
                                 TitleView(title: "Comedians")
                                 ComedianView()
