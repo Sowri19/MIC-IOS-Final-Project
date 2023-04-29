@@ -90,7 +90,7 @@ struct NavigationBarView: View {
                 }
             }){
                 Text("Logout")
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
                     .background(Color.red)
@@ -107,6 +107,7 @@ struct NavigationBarView: View {
                 }
             }) //: Button
         }
+        
         .sheet(isPresented: $showProfileView) {
             // Present the ProfileView modally
             UserProfileView()
