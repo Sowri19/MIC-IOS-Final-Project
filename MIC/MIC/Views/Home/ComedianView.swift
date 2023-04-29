@@ -44,6 +44,7 @@ class ComedianGViewViewModel: ObservableObject {
 struct ComedianView: View {
     // MARK: - PROPERTY
     @StateObject var viewModel = ComedianGViewViewModel()
+    @State private var showComedianProfile: Bool = false
     
     // MARK: - BODY
     var body: some View {
@@ -53,7 +54,9 @@ struct ComedianView: View {
                 GridItem(.flexible(), spacing: 15)
             ], spacing: 15) {
                 ForEach(viewModel.comedians) { comedian in
-                    Button(action: {}, label: {
+                    Button(action: {
+                        self.showComedianProfile = true
+                    }, label: {
                         VStack(alignment: .center, spacing: 10) {
                             // Show the comedian's picture
                             ZStack {
@@ -81,6 +84,10 @@ struct ComedianView: View {
                         .padding(.horizontal, 20)
                     }) //: Button
                     .buttonStyle(PlainButtonStyle())
+                    .sheet(isPresented: $showComedianProfile) {
+                        ComedianProfileView1(firstName: comedian.firstName, lastName: comedian.lastName, rating: 5, genre: comedian.genre, bio: comedian.bio, profileImage: comedian.picture ?? UIImage())
+                }
+                
                 }
             } //: LazyVGrid
             .padding(.top, 15)
@@ -105,6 +112,58 @@ extension Color {
             blue: Double((rgbValue >> 00) & 0xff) / 255,
             opacity: 1
         )
+    }
+}
+
+struct ComedianProfileView1: View {
+    
+    let firstName: String
+    let lastName: String
+    let rating: Int
+    let genre: String
+    let bio: String
+    let profileImage: UIImage
+    
+    var body: some View {
+        ZStack {
+            LinearGradient(
+                gradient: Gradient(colors: [Color(red: 255/255, green: 128/255, blue: 128/255), Color(red: 255/255, green: 224/255, blue: 0)]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            VStack {
+                Image(uiImage: profileImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 200, height: 200)
+                    .clipShape(Circle())
+                    .overlay(Circle().stroke(Color.white, lineWidth: 4))
+                    .shadow(radius: 10)
+                Text("\(firstName) \(lastName)")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                Text("Rating: \(rating)")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                HStack {
+                    Image(systemName: "tag.fill")
+                        .foregroundColor(.white)
+                    Text(genre)
+                        .font(.subheadline)
+                        .foregroundColor(.white)
+                }
+                .padding(.top)
+                Text(bio)
+                    .font(.subheadline)
+                    .foregroundColor(.white)
+                    .padding(.top, 20)
+                    .padding(.horizontal)
+                Spacer()
+            }
+            .padding()
+        }
+        .edgesIgnoringSafeArea(.all)
     }
 }
 
