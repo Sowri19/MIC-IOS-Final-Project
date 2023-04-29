@@ -181,39 +181,24 @@ struct ContentView: View {
                             
                                 
                         // : Navigation Bar -- till here
-                        
-                        // Login ID and Sign out Button
-                        Text("Logged In! \nYour user id is \(userID)")
-                        Button(action: {
-                            let firebaseAuth = Auth.auth()
-                            do {
-                                try firebaseAuth.signOut()
-                                withAnimation{
-                                    userID = ""
-                                }
-                            } catch let signOutError as NSError {
-                                print("Error signing out: %@", signOutError)
-                            }
-                        }){
-                            Text("Sign Out")
-                        } // :Login ID and Sign out Button
-                        
+                                                
                         ScrollView(.vertical, showsIndicators: false, content:{
                             VStack(spacing: 0){
                                 FeaturedTabView()
                                     .padding(.vertical, 20)
                                 ComedyClubGridView()
                                 TitleView(title: "Comedians")
-                                LazyVGrid(columns: gridLayout, spacing: 15, content: {
-                                    //                                ForEach(<#T##data: Range<Int>##Range<Int>#>, content: <#T##(Int) -> View#>)
-                                    ComedianView()
-                                        .onTapGesture {
-                                            withAnimation(.easeOut){
-                                                //                                                Bookings.selectedBooking = ComedianModel
-                                                Bookings.showingBooking = true
-                                            }
-                                        }
-                                }) //:Grid
+                                ComedianView()
+//                                LazyVGrid(columns: gridLayout, spacing: 15, content: {
+//                                    //                                ForEach(<#T##data: Range<Int>##Range<Int>#>, content: <#T##(Int) -> View#>)
+//                                    ComedianView()
+//                                        .onTapGesture {
+//                                            withAnimation(.easeOut){
+//                                                //                                                Bookings.selectedBooking = ComedianModel
+//                                                Bookings.showingBooking = true
+//                                            }
+//                                        }
+//                                }) //:Grid
                                 .padding(15)
                                 TitleView(title: "Comedy Genres")
                                 ComedyCategoryGridView()
@@ -234,10 +219,11 @@ struct ContentView: View {
                             .background(Color.white)
                             .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 5)
                         // : Navigation Bar -- till here
-                        
+                        Text("Your Events")
+                                .fontWeight(.bold)
                         ScrollView(.vertical, showsIndicators: false, content:{
                             VStack(spacing: 0){
-//                                ComedianUserDetailView(title: "Your Events")
+                                ComedianUserDetailView()
                                 FooterView()
                                     .padding(.horizontal)
                             } //:VStack
@@ -337,9 +323,13 @@ struct ComClubCreateEventView: View {
     
     @State private var EventName: String = ""
     @State private var Description: String = ""
-    @State private var Price: Int?
+    @State private var Price: Int? = 0
     @State var date = Date()
     @State var ComedianName: String = ""
+    @State private var picture: UIImage?
+    
+    @State private var selectedComedian: String = ""
+    @State private var comedianID: String = ""
     
     @State private var showAlert = false
     @State private var alertMessage = ""
@@ -351,19 +341,11 @@ struct ComClubCreateEventView: View {
     @State private var alertMessageUsers = [String]()
     @State var events: [[String: Any]] = []
     
-
-    let comedians = ["Dave Chappelle", "Trevor Noah", "Ellen DeGeneres", "Amy Schumer"]
-    @State private var selectedComedian = "Dave Chappelle"
-
     @AppStorage("uid") var userID: String = ""
-    @AppStorage("isComedian") var isComedian: Bool = false
-    @AppStorage("isComedyClub") var isComedyClub: Bool = false
     @AppStorage("isDocumentID") var isDocumentID: String = ""
-    @AppStorage("profileImage") var profileImage: String = ""
+
 
     var body: some View {
-        
-
         ZStack{
             Color.yellow.edgesIgnoringSafeArea(.all)
             ScrollView(.vertical, showsIndicators: false, content:{
@@ -376,27 +358,24 @@ struct ComClubCreateEventView: View {
                             .font(.largeTitle)
                             .bold()
                         Spacer()
+                        if let image = selectedImage {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 80, height: 80)
+                                .clipShape(Circle())
+                        } else {
+                            Image(systemName: "person.circle")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 80, height: 80)
+                                .foregroundColor(.black)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
                     }
                     .padding()
                     .padding(.top)
-                    .onAppear() {
-                        
-                    }
-                    
-                    if let image = selectedImage {
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 80, height: 80)
-                            .clipShape(Circle())
-                    } else {
-                        Image(systemName: "person.circle")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 80, height: 80)
-                            .foregroundColor(.black)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                    }
+
                     HStack {
                         Image(systemName: "star")
                         TextField("Event Name", text: $EventName)
@@ -412,20 +391,23 @@ struct ComClubCreateEventView: View {
                             .foregroundColor(.black)
                         TextField("Description", text: $Description)
                     }
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                     .padding()
                     .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
                     .padding()
                     
                     HStack {
                         Image(systemName: "dollarsign.circle")
-                        TextField("price", value: $Price, formatter: NumberFormatter())
+                        TextField("price", text: Binding(
+                            get: { Price.map(String.init) ?? "" },
+                            set: { Price = Int($0) }
+                        ))
                     }
                     .foregroundColor(.black)
                     .padding()
                     .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
                     .padding()
-                    
+
                     HStack {
                         Image(systemName: "list")
                         DatePicker("Date", selection: $date, displayedComponents: .date)
@@ -436,27 +418,15 @@ struct ComClubCreateEventView: View {
                     .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
                     .padding()
                     
-                   
                     HStack {
-                        HStack {
-                            Text("Comedians")
-                            Spacer()
-                        }
-                        .padding(.leading)
-                        
-                        
-                        
-                        Picker(selection: $selectedComedian, label: Text("")) {
-                            ForEach(comedians, id: \.self) { color in
-                                Text(color)
-                            }
-                        }
-                        .pickerStyle(MenuPickerStyle())
-                        .foregroundColor(.black)
-                        .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
-                        .frame(height: 20)
-                        .colorScheme(.dark)
-                    }.padding()
+                        Image(systemName: "star")
+                        TextField("Comedian Name", text: $ComedianName)
+                    }
+                    .foregroundColor(.black)
+                    .padding()
+                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 2).foregroundColor(.black))
+                    .padding()
+                   
                     HStack{
                         Button(action: {
                             self.showImagePicker = true
@@ -477,61 +447,69 @@ struct ComClubCreateEventView: View {
                         ImagePicker(selectedImage: $selectedImage, sourceType: .photoLibrary)
                     }
                     Spacer()
-                    Button{
-                        
-                        do {
-                            let body = [
-                                "id": UUID().uuidString,
-                                "comedy_club_id": userID,
-                                "comedian_id": selectedComedian,
-                                "event_name": EventName,
-                                "date": date.formatted(),
-                                "price": Price,
-                                "description": Description,
-//                                "picture": selectedImage
-                            ] as [String : Any]
-                            let jsonData = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
-                            let jsonString = String(data: jsonData, encoding: .utf8)!
-                            guard let url = URL(string: "http://localhost:8080/events/create") else {
-                                return
+            Button{
+                       
+                let db = Firestore.firestore()
+                db.collection("users")
+                    .whereField("isComedian", isEqualTo: true)
+                    .whereField("firstName", isEqualTo: ComedianName)
+                    .getDocuments { (querySnapshot, error) in
+                        if let error = error {
+                            print("Error getting documents: \(error)")
+                        } else {
+                            if let querySnapshot = querySnapshot, let document = querySnapshot.documents.first {
+                                let comedianDocID = document.documentID
+                                print("Comedian document ID: \(comedianDocID)")
+                                
+                                // Now search for the comedian's uid in the same document
+                                self.comedianID = document.data()["uid"] as? String ?? ""
+                                print("Comedian UID: \(comedianID)")
+                                
+                                // Use the comedianDocID and comedianUID as needed
+                            } else {
+                                print("Comedian not found")
                             }
-                            
-                            var request = URLRequest(url: url)
-                            request.httpMethod = "POST"
-                            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                            
-                            request.httpBody = jsonString.data(using: .utf8)
-                            
-                            let session = URLSession.shared
-                            
-                            let task = session.dataTask(with: request){ data, response, error in
-                                guard let data = data, error == nil else {
-                                    print(error?.localizedDescription ?? "Unknown error")
-                                    return
-                                }
-                                if let httpResponse = response as? HTTPURLResponse {
-                                    if (200...299).contains(httpResponse.statusCode) {
-                                        do {
-                                            let responseData = String(data: data, encoding: .utf8)!
-                                            DispatchQueue.main.async {
-                                                alertMessage = responseData
-                                                showAlert = true
-                                            }
-                                        } catch {
-                                            print("Error decoding JSON: \(error.localizedDescription)")
-                                        }
+                        }
+                    }
+            
+                let documentRef = db.collection("events").document()
+                let imageData = selectedImage?.jpegData(compressionQuality: 0.5)
+
+                db.collection("users")
+                    .whereField("isComedian", isEqualTo: true)
+                    .whereField("firstName", isEqualTo: ComedianName)
+                    .getDocuments { (querySnapshot, error) in
+                        if let error = error {
+                            print("Error getting documents: \(error)")
+                        } else {
+                            if let querySnapshot = querySnapshot, let document = querySnapshot.documents.first {
+                                print(document.documentID)
+                                let comedianID = (document.data()["uid"] as? String) ?? ""
+                                print("Comedian UID: \(comedianID)")
+
+                                documentRef.setData([
+                                    "id": UUID().uuidString,
+                                    "eventName": EventName,
+                                    "description": Description,
+                                    "price": Price ?? 0,
+                                    "date": date.formatted(),
+                                    "comedian_id": comedianID,
+                                    "comedy_club_id": userID,
+                                    "comedian_name": ComedianName,
+                                    "picture": imageData ?? Data(),
+                                    "last_fetched_uid": Timestamp(date: Date())
+                                ], merge: true) { err in
+                                    if let err = err {
+                                        print("Error appending data: \(err)")
                                     } else {
-                                        print("Server Error: \(httpResponse.statusCode)")
+                                        print("Data appended successfully!")
                                     }
                                 }
+                            } else {
+                                print("Comedian not found")
                             }
-                            task.resume()
-                        } catch {
-                            print(error.localizedDescription)
                         }
-                        
-                       
-                        
+                    }
                     }label: {
                         // Button label
                         Text("Create")
@@ -544,15 +522,12 @@ struct ComClubCreateEventView: View {
                                 .fill(Color.black))
                             .padding(.horizontal)
                     }
-                    
                 }
             }) //:Scroll
         }.alert(isPresented: $showAlert) {
             Alert(title: Text("Response"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
-        }
-                       
-        
+    }
 }
 
 //protocol MyDelegate {
