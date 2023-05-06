@@ -48,49 +48,35 @@ struct ComedyClubGridView: View {
                     footer: SectionView(rotateClockwise: true)
                 ) {
                     ForEach(viewModel.comedyClubs) { comedyClub in
-//                        Button(action: {
-//                            // Handle button tap here
-//                        }) {
-//                            VStack(alignment: .leading) {
-//                                Image(uiImage: comedyClub.picture ?? UIImage())
-//                                    .resizable()
-//                                    .scaledToFill()
-//                                    .frame(width: 150, height: 150)
-//                                    .cornerRadius(10)
-//                                Text(comedyClub.firstName + " " + comedyClub.lastName)
-//                                    .font(.headline)
-//                                Text(comedyClub.location)
-//                                    .font(.subheadline)
-//                                    .foregroundColor(.gray)
-//                            }
-//                            .padding()
-//                            .frame(maxWidth: .infinity)
-//                            .background(Color.white)
-//                            .cornerRadius(10)
-//                            .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 0)
-//                        }
-//                        .buttonStyle(PlainButtonStyle())
                         Button(action: {
                             self.showCCProfileView = true
                             self.selectedClub = comedyClub
                         }, label: {
                             HStack(alignment: .center, spacing: 6){
                                 // Show the comedy club's picture
-                                Image(uiImage: comedyClub.picture ?? UIImage(systemName: "person.circle.fill")!)
+                                Image(systemName: "theatermasks.circle.fill")
                                     .renderingMode(.template)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 30, height: 30)
                                     .foregroundColor(.gray)
-                                    .clipShape(Circle())
                                 // Show the comedy club's first name
                                 Text(comedyClub.firstName)
                                     .fontWeight(.light)
                                     .foregroundColor(.gray)
                             } //: HStack
+                            .frame(width: 150) // Set a fixed width for the HStack
                             .padding()
                             .background(
-                                RoundedRectangle(cornerRadius: 12).stroke(Color.gray, lineWidth: 1))
+                                RoundedRectangle(cornerRadius: 12).stroke(Color.gray, lineWidth: 1)
+                            )
+                            .background(
+                                Color.purple
+                                    .brightness(0.8)
+                                    .saturation(0.9)
+                                    .cornerRadius(12)
+                            )
+                            .frame(width: 200, height: 50) // Set a fixed size for the button
                         }) //: Button
                         .sheet(isPresented: $showCCProfileView){
                             ComedyClubProfileView1(clubName: comedyClub.firstName, emailAddress: comedyClub.pointOfContact, address: comedyClub.location, businessType: comedyClub.genre, rating: 5)
@@ -104,8 +90,8 @@ struct ComedyClubGridView: View {
             .onAppear {
                 viewModel.loadData()
             }
-        }.background(Color(hex: "ecc985"))
-
+        }.shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+            .padding(.bottom, 15)
     }
 }
 

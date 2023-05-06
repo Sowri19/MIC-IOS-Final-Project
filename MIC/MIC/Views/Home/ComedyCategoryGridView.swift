@@ -55,17 +55,19 @@ struct ComedyCategoryGridView: View {
                     }, label: {
                         VStack(alignment: .center, spacing: 6){
                             // Show the comedian's picture
-                            Image(uiImage: comedian.picture ?? UIImage(systemName: "person.circle.fill")!)
+//                            Image(uiImage: comedian.picture ?? UIImage(systemName: "person.circle.fill")!)
+                            Image(systemName: "theatermasks")
                                 .resizable()
                                 .scaledToFit()
-                                .padding(20) // increase padding size to make image bigger
+                                .foregroundColor(.gray)
+//                                .padding(20) // increase padding size to make image bigger
                                 .background(Color.white.cornerRadius(12))
-                                .background(
-                                    RoundedRectangle(cornerRadius: 12).stroke(Color.gray, lineWidth: 1))
-                            // Show the comedian's first name
+//                                .background(
+//                                    RoundedRectangle(cornerRadius: 12).stroke(Color.gray, lineWidth: 1))
+//                            // Show the comedian's first name
                             Text(comedian.genre)
-                                .fontWeight(.light)
-                                .foregroundColor(.purple)
+                                .fontWeight(.bold)
+                                .foregroundColor(.black)
                         } //: HStack
                         .padding()
                     }) //: Button
@@ -77,12 +79,14 @@ struct ComedyCategoryGridView: View {
                 }
             } //: GRID
             .frame(height: 200)
-            .padding(15)
+//            .padding(15)
             .onAppear {
                 viewModel.loadComediansData() // call the correct method name here
             }
         } //:SCROLL
-        .background(Color(hex: "2d9abf"))
+        .padding(.top, 15)
+        .padding(.bottom, 15)
+//        .background(Color(hex: "2d9abf"))
     }
 }
 

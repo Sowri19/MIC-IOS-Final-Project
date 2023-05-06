@@ -63,8 +63,6 @@ struct NavigationBarComedyClubView: View {
     @State private var isAnimated: Bool = false
     @AppStorage("uid") var userID: String = ""
     @State private var ClubProfileView: Bool = false // New state variable
-    @AppStorage("isDocumentID") var isDocumentID: String = ""
-   
    
     // MARK: - BODY
 
@@ -133,7 +131,6 @@ struct ComClubProfileView: View {
     @State private var selectedImage: UIImage?
     @State private var showImagePicker = false
 
-    @AppStorage("isDocumentID") var isDocumentID: String = ""
     @AppStorage("uid") var userID: String = ""
 
     var body: some View {
@@ -175,18 +172,27 @@ struct ComClubProfileView: View {
                 .padding(.top)
                 .onAppear{
                     let db = Firestore.firestore()
-                    db.collection("users").document(isDocumentID).getDocument { (document, error) in
-                        if let document = document, document.exists {
-                            self.firstName = document.data()?["firstName"] as? String ?? ""
-                            self.lastName = document.data()?["lastName"] as? String ?? ""
-                            self.Location = document.data()?["Location"] as? String ?? ""
-                            self.PointOfContact = document.data()?["PointOfContact"] as? String ?? ""
-                            if let imageData = document.data()?["picture"] as? Data {
-                                self.selectedImage = UIImage(data: imageData)
-                            }
-                            print("Document ID: \(document.documentID)")
+                    db.collection("users").whereField("uid", isEqualTo: userID).getDocuments { (querySnapshot, error) in
+                        if let error = error {
+                            print("Error getting documents: \(error)")
                         } else {
-                            print("Error retrieving document ID: \(error?.localizedDescription ?? "unknown error")")
+                            for document in querySnapshot!.documents {
+                                let documentID = document.documentID
+                                db.collection("users").document(documentID).getDocument { (document, error) in
+                                    if let document = document, document.exists {
+                                        self.firstName = document.data()?["firstName"] as? String ?? ""
+                                        self.lastName = document.data()?["lastName"] as? String ?? ""
+                                        self.Location = document.data()?["Location"] as? String ?? ""
+                                        self.PointOfContact = document.data()?["PointOfContact"] as? String ?? ""
+                                        if let imageData = document.data()?["picture"] as? Data {
+                                            self.selectedImage = UIImage(data: imageData)
+                                        }
+                                        print("Document ID: \(document.documentID)")
+                                    } else {
+                                        print("Error retrieving document ID: \(error?.localizedDescription ?? "unknown error")")
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -288,36 +294,46 @@ struct ComClubProfileView: View {
                 Spacer()
                 Button{
                     let db = Firestore.firestore()
-                    let documentRef = db.collection("users").document(isDocumentID)
-                    let imageData = selectedImage?.jpegData(compressionQuality: 0.5)
-                    documentRef.setData([
-                        "PointOfContact": pointOfContact,
-                        "Location": location,
-                        "picture": imageData ?? Data()
-                    ], merge: true) { err in
-                        if let err = err {
-                            print("Error appending data: \(err)")
+                    db.collection("users").whereField("uid", isEqualTo: userID).getDocuments { (querySnapshot, error) in
+                        if let error = error {
+                            print("Error getting documents: \(error)")
                         } else {
-                            print("Data appended successfully!")
-                        }
-                    }
-                    selectedImage = nil
-                    pointOfContact = ""
-                    location = ""
-                    db.collection("users").document(isDocumentID).getDocument { (document, error) in
-                        if let document = document, document.exists {
-                            self.firstName = document.data()?["firstName"] as? String ?? ""
-                            self.lastName = document.data()?["lastName"] as? String ?? ""
-                            self.Location = document.data()?["Location"] as? String ?? ""
-                            self.PointOfContact = document.data()?["PointOfContact"] as? String ?? ""
-                            if let imageData = document.data()?["picture"] as? Data {
-                                self.selectedImage = UIImage(data: imageData)
+                            for document in querySnapshot!.documents {
+                                let documentID = document.documentID
+                                let documentRef = db.collection("users").document(documentID)
+                                let imageData = selectedImage?.jpegData(compressionQuality: 0.5)
+                                documentRef.setData([
+                                    "PointOfContact": pointOfContact,
+                                    "Location": location,
+                                    "picture": imageData ?? Data()
+                                ], merge: true) { err in
+                                    if let err = err {
+                                        print("Error appending data: \(err)")
+                                    } else {
+                                        print("Data appended successfully!")
+                                    }
+                                }
+                                selectedImage = nil
+                                pointOfContact = ""
+                                location = ""
+                                db.collection("users").document(documentID).getDocument { (document, error) in
+                                    if let document = document, document.exists {
+                                        self.firstName = document.data()?["firstName"] as? String ?? ""
+                                        self.lastName = document.data()?["lastName"] as? String ?? ""
+                                        self.Location = document.data()?["Location"] as? String ?? ""
+                                        self.PointOfContact = document.data()?["PointOfContact"] as? String ?? ""
+                                        if let imageData = document.data()?["picture"] as? Data {
+                                            self.selectedImage = UIImage(data: imageData)
+                                        }
+                                        print("Document ID: \(document.documentID)")
+                                    } else {
+                                        print("Error retrieving document ID: \(error?.localizedDescription ?? "unknown error")")
+                                    }
+                                }
                             }
-                            print("Document ID: \(document.documentID)")
-                        } else {
-                            print("Error retrieving document ID: \(error?.localizedDescription ?? "unknown error")")
                         }
                     }
+                    
                     }label: {
                     // Button label
                     Text("Update your Profile")
