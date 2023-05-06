@@ -61,16 +61,16 @@ struct ComedianView: View {
                     }, label: {
                         VStack(alignment: .center, spacing: 10) {
                             // Show the comedian's picture
-                            ZStack {
+                            ZStack(alignment: .top) {
                                 Image(uiImage: comedian.picture ?? UIImage(systemName: "person.circle.fill")!)
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: 150, height: 150)
-                                    .cornerRadius(75)
-                                    .shadow(radius: 5)
+                                    .cornerRadius(20)
                                 LinearGradient(gradient: Gradient(colors: [.clear, .black]), startPoint: .top, endPoint: .bottom)
                                     .frame(width: 150, height: 150)
-                                    .cornerRadius(75)
+                                    .cornerRadius(20)
+                                    .opacity(0.7)
                             }
                             // Show the comedian's name
                             Text(comedian.firstName)
@@ -78,7 +78,7 @@ struct ComedianView: View {
                                 .foregroundColor(.primary)
                         } //: VStack
                         .padding()
-                        .background(Color(hex: "fae7b6"))
+//                        .background(Color(hex: "fae7b6"))
                         .frame(maxWidth: .infinity)
                         .background(Color.white)
                         .cornerRadius(20)
@@ -89,6 +89,7 @@ struct ComedianView: View {
                 }
             } //: LazyVGrid
             .padding(.top, 15)
+            .padding(.bottom, 15)
             .onAppear {
                 viewModel.loadComediansData()
             }
@@ -102,21 +103,21 @@ struct ComedianView: View {
 }
 
 
-extension Color {
-    init(hex: String) {
-        let scanner = Scanner(string: hex)
-        var rgbValue: UInt64 = 0
-        scanner.scanHexInt64(&rgbValue)
-
-        self.init(
-            .sRGB,
-            red: Double((rgbValue >> 16) & 0xff) / 255,
-            green: Double((rgbValue >> 08) & 0xff) / 255,
-            blue: Double((rgbValue >> 00) & 0xff) / 255,
-            opacity: 1
-        )
-    }
-}
+//extension Color {
+//    init(hex: String) {
+//        let scanner = Scanner(string: hex)
+//        var rgbValue: UInt64 = 0
+//        scanner.scanHexInt64(&rgbValue)
+//
+//        self.init(
+//            .sRGB,
+//            red: Double((rgbValue >> 16) & 0xff) / 255,
+//            green: Double((rgbValue >> 08) & 0xff) / 255,
+//            blue: Double((rgbValue >> 00) & 0xff) / 255,
+//            opacity: 1
+//        )
+//    }
+//}
 
 struct ComedianProfileView1: View {
     

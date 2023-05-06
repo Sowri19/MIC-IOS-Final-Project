@@ -67,6 +67,7 @@ struct FeaturedTabView: View {
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                                     .cornerRadius(20)
                                 VStack(alignment: .leading, spacing: 8) {
+                                    Spacer()
                                     Text(event.eventName)
                                         .font(.title)
                                         .fontWeight(.bold)
@@ -85,6 +86,7 @@ struct FeaturedTabView: View {
                                         .fontWeight(.bold)
                                         .foregroundColor(.white)
                                         .fontDesign(.rounded)
+                                    Spacer()
                                 }
                                 .padding(.bottom, 8)
                                 .padding(.leading, 8)
@@ -101,7 +103,12 @@ struct FeaturedTabView: View {
             }
                     }
         .frame(height: 200)
+        .cornerRadius(20)
         .frame(maxWidth: .infinity)
+        .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+        .background(Color.white)
+        .padding(.horizontal, 3)
+        .padding(.bottom, 15)
         .onAppear {
             viewModel.loadEventData()
         }

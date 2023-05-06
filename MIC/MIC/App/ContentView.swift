@@ -178,32 +178,17 @@ struct ContentView: View {
                                 .first?.windows.first?.safeAreaInsets.top ?? 0)
                             .background(Color.white)
                             .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 5)
-                            
-                                
                         // : Navigation Bar -- till here
                                                 
                         ScrollView(.vertical, showsIndicators: false, content:{
                             VStack(spacing: 0){
                                 FeaturedTabView()
-                                    .padding(.vertical, 2)
-                                    .padding(.horizontal, 0)
                                 ComedyClubGridView()
                                 TitleView(title: "Comedians")
                                 ComedianView()
-//                                LazyVGrid(columns: gridLayout, spacing: 15, content: {
-//                                    //                                ForEach(<#T##data: Range<Int>##Range<Int>#>, content: <#T##(Int) -> View#>)
-//                                    ComedianView()
-//                                        .onTapGesture {
-//                                            withAnimation(.easeOut){
-//                                                //                                                Bookings.selectedBooking = ComedianModel
-//                                                Bookings.showingBooking = true
-//                                            }
-//                                        }
-//                                }) //:Grid
-                                .padding(15)
+                                
                                 TitleView(title: "Comedy Genres")
                                 ComedyCategoryGridView()
-                                
                                 FooterView()
                                     .padding(.horizontal)
                             } //:VStack

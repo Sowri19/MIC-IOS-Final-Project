@@ -15,13 +15,20 @@ struct TitleView: View {
     // MARK: - BODY
 
     var body: some View {
-        HStack{
-            Text(title)
-                .font(.largeTitle)
-                .fontWeight(.heavy)
+        ZStack {
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.gray, lineWidth: 1)
+                .background(Color.white)
+                .cornerRadius(12)
+                .shadow(color: Color.gray.opacity(0.5), radius: 5, x: 0, y: 2)
+                .padding(.horizontal, 20)
             
-            Spacer()
+            Text(title)
+                .font(.title)
+                .fontWeight(.bold)
+                .multilineTextAlignment(.center)
         }
+        .frame(maxWidth: .infinity)
     }
 }
 
