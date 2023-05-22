@@ -76,6 +76,17 @@ struct ComedianView: View {
                             Text(comedian.firstName)
                                 .fontWeight(.semibold)
                                 .foregroundColor(.primary)
+                            HStack(spacing: 5) {
+                                Text("Rating:")
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.primary)
+                                Image(systemName: "star.fill")
+//                                ForEach(0..<Comedian.ratings) { _ in
+//                                    Image(systemName: "star.fill")
+//                                        .foregroundColor(.yellow)
+//                                }
+                            }
+                            
                         } //: VStack
                         .padding()
 //                        .background(Color(hex: "fae7b6"))

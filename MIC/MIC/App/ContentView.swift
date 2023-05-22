@@ -184,11 +184,12 @@ struct ContentView: View {
                             VStack(spacing: 0){
                                 FeaturedTabView()
                                 ComedyClubGridView()
-                                TitleView(title: "Comedians")
-                                ComedianView()
+                                HomeTabView()
+//                                TitleView(title: "Comedians")
+//                                ComedianView()
                                 
-                                TitleView(title: "Comedy Genres")
-                                ComedyCategoryGridView()
+//                                TitleView(title: "Comedy Genres")
+//                                ComedyCategoryGridView()
                                 FooterView()
                                     .padding(.horizontal)
                             } //:VStack

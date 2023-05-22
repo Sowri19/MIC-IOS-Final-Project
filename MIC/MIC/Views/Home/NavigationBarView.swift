@@ -66,7 +66,6 @@ struct NavigationBarView: View {
     // MARK: - BODY
   
     var body: some View {
-        
         HStack{
             LogoView()
                 .opacity(isAnimated ? 1 : 0)
@@ -106,13 +105,11 @@ struct NavigationBarView: View {
                 }
             }) //: Button
         }
-        
         .sheet(isPresented: $showProfileView) {
             // Present the ProfileView modally
             UserProfileView()
         }
     }
-    
 }
 
 struct UserProfileView: View {
@@ -234,8 +231,6 @@ struct UserProfileView: View {
                 }
                 .padding()
             })
-                
-               
                 HStack{
                     Button(action: {
                         self.showImagePicker = true
@@ -249,7 +244,6 @@ struct UserProfileView: View {
                             .background(RoundedRectangle(cornerRadius: 10)
                             .fill(Color.white))
                             .padding(.horizontal)
-
                     }
                 }
                 .sheet(isPresented: $showImagePicker) {
