@@ -58,6 +58,7 @@
 		838EE69E29F350CE00804AA5 /* TopPartDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838EE69D29F350CE00804AA5 /* TopPartDetailView.swift */; };
 		83B9778429FC838300530AC1 /* ComedianStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B9778329FC838300530AC1 /* ComedianStruct.swift */; };
 		83B9778629FCB14A00530AC1 /* EventMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B9778529FCB14A00530AC1 /* EventMode.swift */; };
+		83D69BF42A0721FA0090672A /* HomeTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D69BF32A0721FA0090672A /* HomeTabView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -112,6 +113,7 @@
 		838EE69D29F350CE00804AA5 /* TopPartDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopPartDetailView.swift; sourceTree = "<group>"; };
 		83B9778329FC838300530AC1 /* ComedianStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComedianStruct.swift; sourceTree = "<group>"; };
 		83B9778529FCB14A00530AC1 /* EventMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMode.swift; sourceTree = "<group>"; };
+		83D69BF32A0721FA0090672A /* HomeTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -246,6 +248,7 @@
 				838EE68D29F331D100804AA5 /* ComedianView.swift */,
 				838EE69129F33B8700804AA5 /* ComedyCategoryView.swift */,
 				838EE69329F33C9900804AA5 /* ComedyCategoryGridView.swift */,
+				83D69BF32A0721FA0090672A /* HomeTabView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -378,6 +381,7 @@
 				8326D17829F89F8F007C6831 /* AddToCartDetailView.swift in Sources */,
 				83068B1529EF4791006962EA /* SignUpView.swift in Sources */,
 				83068B1729EF4970006962EA /* AuthView.swift in Sources */,
+				83D69BF42A0721FA0090672A /* HomeTabView.swift in Sources */,
 				838EE69A29F34B2200804AA5 /* NavigationBarDetailComedianView.swift in Sources */,
 				23C429D229F3ACB900F9E1AB /* User.swift in Sources */,
 				8326D16229F7410B007C6831 /* NavigationBarComedianView.swift in Sources */,
